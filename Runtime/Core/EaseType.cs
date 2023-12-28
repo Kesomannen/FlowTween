@@ -1,6 +1,6 @@
 ﻿namespace FlowTween {
 
-public enum PresetEaseType {
+public enum EaseType {
     Linear,
     SineIn,
     SineOut,

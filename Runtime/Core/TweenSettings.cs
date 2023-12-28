@@ -8,7 +8,7 @@ public class TweenSettings {
     [Min(0)]
     [SerializeField] float _duration = 1;
     [SerializeField] EasingType _easeType;
-    [SerializeField] PresetEaseType _presetEase;
+    [SerializeField] EaseType _presetEase;
     [SerializeField] AnimationCurve _customEase;
     [SerializeField] LoopMode _loopMode;
 
@@ -17,7 +17,7 @@ public class TweenSettings {
         set => _duration = Mathf.Max(0, value);
     }
 
-    public PresetEaseType PresetEase {
+    public EaseType PresetEase {
         get => _presetEase;
         set {
             _presetEase = value;

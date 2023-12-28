@@ -1,4 +1,5 @@
 ﻿using System;
+using FlowTween.Templates;
 using UnityEngine;
 
 namespace FlowTween {
@@ -9,8 +10,8 @@ public static class TweenExtensions {
         return tween;
     }
     
-    public static T Ease<T>(this T tween, PresetEaseType ease) where T : TweenBase {
-        tween.EaseFunction = PresetEaseUtil.GetFunction(ease);
+    public static T Ease<T>(this T tween, EaseType ease) where T : TweenBase {
+        tween.EaseFunction = EaseUtil.GetFunction(ease);
         return tween;
     }
     
@@ -27,6 +28,10 @@ public static class TweenExtensions {
     public static T Apply<T>(this T tween, TweenSettings settings) where T : TweenBase {
         settings.Apply(tween);
         return tween;
+    }
+    
+    public static T Apply<T>(this T tween, TweenSettingsProperty settings) where T : TweenBase {
+        return tween.Apply(settings.Value);
     }
     
     public static T Loop<T>(this T tween, LoopMode mode = LoopMode.Loop) where T : TweenBase {
