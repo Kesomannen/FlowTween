@@ -25,12 +25,16 @@ void Start()
 
 Not too familiar with all the ease types? You can preview them right in the editor!
 
+![FlowTweenExample2](https://github.com/Kesomannen/FlowTween/assets/113015915/04e8b1d4-70d8-4370-904c-c6ef03c676ad)
+
 <b>Note! FlowTween is not fully compatible with IMGUI. If you have an IMGUI custom editor,
-or a package like NaughtyAttributes which overrides all editors, the tween preview will not show.<b>
+or a package like NaughtyAttributes which overrides all editors, the tween preview will not show.</b>
 
 Prefer a no-code approach? The `Tweener` component can tween tons of properties without a single line of code!
 
-![bild](https://github.com/Kesomannen/FlowTween/assets/113015915/e342d259-763e-4f8d-8174-b653af034cd4)
+![FlowTweenExample](https://github.com/Kesomannen/FlowTween/assets/113015915/ce41dd06-44ce-4132-b672-57f4d86bdb70)
+
+<b>Note! The Tweener component is fully incompatible with IMGUI.</b>
 
 ## Installation
 
@@ -40,3 +44,4 @@ FlowTween can be installed like a normal package in the Package Manager
 2. Press the `+` button in the top left
 3. Choose "Add package from Git URL..."
 4. Add `https://github.com/Kesomannen/FlowTween.git`
+
