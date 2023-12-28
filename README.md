@@ -16,8 +16,7 @@ which let's you easily customize your tweens in the inspector:
 ```csharp
 [SerializeField] TweenSettings _settings;
 
-void Start()
-{
+void Start() {
     transform.TweenX(10).Apply(_settings);
 }
 ```
