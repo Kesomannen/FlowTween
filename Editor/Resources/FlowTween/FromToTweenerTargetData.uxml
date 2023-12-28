@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Plugins/FlowTween/Editor/Resources/FlowTween/FlowTweenStyle.uss?fileID=7433441132597879392&amp;guid=1652f00bc0ccdfa47868f7330aac3e70&amp;type=3#FlowTweenStyle" />
+    <ui:VisualElement style="flex-direction: row;">
+        <uie:PropertyField binding-path="_start" style="flex-grow: 1;" />
+        <ui:Label tabindex="-1" text="Relative?" parse-escape-sequences="true" display-tooltip-when-elided="true" class="relative-label" />
+        <ui:Toggle binding-path="_startRelative" />
+    </ui:VisualElement>
+    <ui:VisualElement style="flex-grow: 0; flex-direction: row;">
+        <uie:PropertyField binding-path="_end" style="flex-grow: 1;" />
+        <ui:Label tabindex="-1" text="Relative?" parse-escape-sequences="true" display-tooltip-when-elided="true" class="relative-label" />
+        <ui:Toggle binding-path="_endRelative" />
+    </ui:VisualElement>
+</ui:UXML>

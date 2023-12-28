@@ -1,0 +1,32 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Plugins/FlowTween/Editor/Resources/FlowTween/FlowTweenStyle.uss?fileID=7433441132597879392&amp;guid=1652f00bc0ccdfa47868f7330aac3e70&amp;type=3#FlowTweenStyle" />
+    <ui:VisualElement name="no-tweens-label" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.1); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; flex-direction: row; margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
+        <FlowTween.Editor.MaterialIcon tabindex="-1" icon="warning" style="color: rgb(255, 193, 7);" />
+        <ui:Label tabindex="-1" text="No tweens!" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: middle-left;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="tweens" style="flex-grow: 1;" />
+    <ui:VisualElement style="flex-grow: 0; align-items: auto; flex-direction: row-reverse;">
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="add-button" tooltip="Create a new tween." class="icon-button" style="flex-direction: row;">
+            <FlowTween.Editor.MaterialIcon tabindex="-1" icon="add" />
+            <ui:Label tabindex="-1" text="Add" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+        </ui:Button>
+    </ui:VisualElement>
+    <ui:Toggle label="Play On Enable (all)" name="play-on-enable-all" class="unity-base-field__aligned" />
+    <ui:Toggle label="Play On Disable (all)" name="play-on-disable-all" class="unity-base-field__aligned" />
+    <ui:Toggle label="Cancel On Disable" tooltip="Whether or not to cancel tweens whenever OnDisable is called." binding-path="_cancelOnDisable" class="unity-base-field__aligned" />
+    <ui:Toggle label="Prevent Overlapping" binding-path="_preventOverlapping" tooltip="Whether or not to prevent multiple tweens from playing at once, unless they were started at the exact same time." class="unity-base-field__aligned" />
+    <ui:VisualElement style="flex-grow: 0; flex-direction: row; justify-content: center;">
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="preview-all-button" tooltip="Preview all tweens.." class="icon-button" style="flex-grow: 1; width: 50%;">
+            <FlowTween.Editor.MaterialIcon tabindex="-1" icon="play_arrow" />
+            <ui:Label tabindex="-1" text="Preview All" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+        </ui:Button>
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="preview-selected-button" tooltip="Preview expanded tweens." class="icon-button" style="flex-grow: 1; width: 50%;">
+            <FlowTween.Editor.MaterialIcon tabindex="-1" icon="play_arrow" />
+            <ui:Label tabindex="-1" text="Preview Selected" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+        </ui:Button>
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="stop-preview-button" class="icon-button" style="flex-grow: 1; width: 50%; display: none;">
+            <FlowTween.Editor.MaterialIcon tabindex="-1" icon="stop" />
+            <ui:Label tabindex="-1" text="Stop Preview" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" />
+        </ui:Button>
+    </ui:VisualElement>
+</ui:UXML>

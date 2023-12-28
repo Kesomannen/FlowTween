@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Plugins/FlowTween/Editor/Resources/FlowTween/FlowTweenStyle.uss?fileID=7433441132597879392&amp;guid=1652f00bc0ccdfa47868f7330aac3e70&amp;type=3#FlowTweenStyle" />
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:DropdownField label="Type" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="type-dropdown" class="unity-base-field__aligned" />
+        <uie:PropertyField name="data-field" />
+        <uie:PropertyField binding-path="_settings" />
+        <ui:VisualElement style="flex-grow: 0; height: 12px;" />
+        <ui:Toggle label="Play On Enable" binding-path="_playOnEnable" name="play-on-enable" tooltip="Whether or not to play the tween whenever OnEnable is called." class="unity-base-field__aligned" />
+        <ui:Toggle label="Play On Disable" binding-path="_playOnDisable" name="play-on-disable" tooltip="Whether or not to play the tween whenever DisableObject (in FlowTween.Disabling) is called on this game object or a parent. Does not trigger from OnDisable." class="unity-base-field__aligned" />
+        <ui:Toggle label="Reset On Disable" binding-path="_resetOnDisable" name="reset-on-disable" tooltip="Whether or not to reset the objects state after disabling to how it was right before the tween played (similarly to previewing in the editor)." class="unity-base-field__aligned" />
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="preview-button" tooltip="Preview this tween." class="icon-button">
+            <FlowTween.Editor.MaterialIcon tabindex="-1" icon="play_arrow" />
+            <ui:Label tabindex="-1" text="Preview" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" />
+        </ui:Button>
+    </ui:VisualElement>
+</ui:UXML>
