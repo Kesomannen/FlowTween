@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FlowTween
-{
+namespace FlowTween {
+    
     public static class Disabling {
         static readonly Dictionary<GameObject, IOnDisableRoutine[]> _cache = new();
         

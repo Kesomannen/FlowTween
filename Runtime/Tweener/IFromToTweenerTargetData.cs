@@ -2,12 +2,12 @@
 
 namespace FlowTween.Components {
 
-public interface ITweenerTargetData<T> {
+public interface IFromToTweenerTargetData<T> {
     T GetStartValue(T current);
     T GetEndValue(T current);
 }
 
-public interface ICompositeTweenerTargetData<T, out TPartId> : ITweenerTargetData<T> {
+public interface ICompositeTweenerTargetData<T, out TPartId> : IFromToTweenerTargetData<T> {
     IEnumerable<TPartId> GetParts();
 }
 

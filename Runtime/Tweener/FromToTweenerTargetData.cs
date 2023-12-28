@@ -5,7 +5,7 @@ using UnityEngine;
 namespace FlowTween.Components {
 
 [Serializable]
-public abstract class FromToTweenerTargetData<T> : ITweenerTargetData<T> {
+public abstract class FromToTweenerTargetData<T> : IFromToTweenerTargetData<T> {
     [SerializeField] T _start;
     [SerializeField] bool _startRelative = true;
     [SerializeField] T _end;

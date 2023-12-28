@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 namespace FlowTween.Editor {
 
 [CustomPropertyDrawer(typeof(TweenerTargetConfig))]
-public class TweenerTargetConfigDrawer : PropertyDrawer {
+internal class TweenerTargetConfigDrawer : PropertyDrawer {
     static Dictionary<string, string> _typeMap;
     
     public override VisualElement CreatePropertyGUI(SerializedProperty property) {

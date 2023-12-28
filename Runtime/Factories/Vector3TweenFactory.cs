@@ -8,12 +8,12 @@ public class Vector3TweenFactory<T> :
     ICompositeTweenFactory<Vector3, T, float, Axis>
 {
     public Vector3TweenFactory(Func<T, Vector3> getter, Action<T, Vector3> setter) 
-        : base(getter, setter, LerpUtil.Lerp) { }
+        : base(getter, setter, Vector3.LerpUnclamped) { }
 
     public void SetPart(ref Vector3 composite, Axis part, float value) => composite[(int)part] = value;
     public float GetPart(Vector3 composite, Axis part) => composite[(int)part];
 
-    public float Lerp(float from, float to, float t) => LerpUtil.Lerp(from, to, t);
+    public float Lerp(float from, float to, float t) => Mathf.LerpUnclamped(from, to, t);
 }
 
 public enum Axis {

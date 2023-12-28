@@ -3,15 +3,16 @@ using UnityEngine;
 
 namespace FlowTween.Components {
 
-public class TweenerTarget<T, THolder, TData> : ITweenerTarget<T, THolder, TData>
+
+public class FromToTweenerTarget<T, THolder, TData> : ITweenerTarget<T, THolder, TData>
     where THolder : Component 
-    where TData : class, ITweenerTargetData<T>, new() 
+    where TData : class, IFromToTweenerTargetData<T>, new() 
 {
     readonly ITweenFactory<T, THolder> _factory;
     
     public Action<THolder, T, T> DrawGizmos;
     
-    public TweenerTarget(ITweenFactory<T, THolder> factory) {
+    public FromToTweenerTarget(ITweenFactory<T, THolder> factory) {
         _factory = factory;
     }
 
@@ -46,19 +47,19 @@ public class TweenerTarget<T, THolder, TData> : ITweenerTarget<T, THolder, TData
     }
 }
 
-public class FloatTweenerTarget<T> : TweenerTarget<float, T, FloatTweenerTargetData> where T : Component {
+public class FloatTweenerTarget<T> : FromToTweenerTarget<float, T, FloatTweenerTargetData> where T : Component {
     public FloatTweenerTarget(ITweenFactory<float, T> factory) : base(factory) { }
 }
 
-public class Vector3TweenerTarget<T> : TweenerTarget<Vector3, T, Vector3TweenerTargetData> where T : Component {
+public class Vector3TweenerTarget<T> : FromToTweenerTarget<Vector3, T, Vector3TweenerTargetData> where T : Component {
     public Vector3TweenerTarget(ITweenFactory<Vector3, T> factory) : base(factory) { }
 }
 
-public class Vector2TweenerTarget<T> : TweenerTarget<Vector2, T, Vector2TweenerTargetData> where T : Component {
+public class Vector2TweenerTarget<T> : FromToTweenerTarget<Vector2, T, Vector2TweenerTargetData> where T : Component {
     public Vector2TweenerTarget(ITweenFactory<Vector2, T> factory) : base(factory) { }
 }
 
-public class ColorTweenerTarget<T> : TweenerTarget<Color, T, ColorTweenerTargetData> where T : Component {
+public class ColorTweenerTarget<T> : FromToTweenerTarget<Color, T, ColorTweenerTargetData> where T : Component {
     public ColorTweenerTarget(ITweenFactory<Color, T> factory) : base(factory) { }
 }
 

@@ -41,7 +41,7 @@ public static class TweenerTargets {
         { "TransformLocalRotation", new Vector3TweenerTarget<Transform>(TransformTweens.LocalEulerAngles) },
         { "TransformScale", new Vector3TweenerTarget<Transform>(TransformTweens.Scale) },
         { "TransformUniformScale", new FloatTweenerTarget<Transform>(TransformTweens.UniformScale) },
-        { "RectTransformPosition", new Vector2TweenerTarget<RectTransform>(RectTransformTweens.Position) },
+        { "RectTransformAnchoredPosition", new Vector2TweenerTarget<RectTransform>(RectTransformTweens.AnchoredPosition) },
         { "RectTransformSizeDelta", new Vector2TweenerTarget<RectTransform>(RectTransformTweens.SizeDelta) },
         { "GraphicColor", new ColorTweenerTarget<Graphic>(GraphicTweens.Color) },
         { "GraphicAlpha", new FloatTweenerTarget<Graphic>(GraphicTweens.Color.AsRGBA().WithPart(RGBA.A)) },

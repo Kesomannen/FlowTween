@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Linq;
 using FlowTween.Templates;
 using UnityEngine;
 
 namespace FlowTween.Components {
-
+    
 [Serializable]
 public class TweenerTargetConfig {
     [SerializeField] string _targetId = FallbackTargetId;
@@ -94,18 +95,44 @@ public class TweenerTargetConfig {
     }
 
     public void Init() {
-        SetTarget(_targetId);
+        RefreshTarget();
     }
 
     public void Validate(GameObject gameObject) {
         if (_targetId == _prevTargetId) return;
-        SetTarget(_targetId);
+        RefreshTarget();
         GetComponent(gameObject);
     }
 
-    void SetTarget(string id) {
-        _targetId = id;
-        _prevTargetId = id;
+    public void SetTargetId(string targetId, object data) {
+        if (targetId == _targetId) return;
+        
+        _targetId = targetId;
+        RefreshTarget();
+        if (_data.GetType() == data.GetType()) {
+            _data = data;
+        } else {
+            throw new ArgumentException($"Data type mismatch: {_data.GetType()} != {data.GetType()}");
+        }
+    }
+
+    public void SetTargetUntyped(ITweenerTarget target, object data) {
+        var id = TweenerTargets.Targets.FirstOrDefault(pair => pair.Value == target).Key;
+        if (id == null) {
+            throw new ArgumentException($"Target {target} is not registered in TweenerTargets");
+        }
+        SetTargetId(id, data);
+    }
+    
+    public void SetTarget<T, THolder, TData>(ITweenerTarget<T, THolder, TData> target, TData data) 
+        where THolder : Component 
+        where TData : class
+    {
+        SetTargetUntyped(target, data);
+    }
+
+    void RefreshTarget() {
+        _prevTargetId = _targetId;
         _data = GetTarget().GetData();
     }
 

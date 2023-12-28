@@ -3,6 +3,9 @@
 namespace FlowTween {
 
 public static class EaseUtil {
+    /// <summary>
+    /// Gets the corresponding easing function for a preset ease type.
+    /// </summary>
     public static Func<float, float> GetFunction(EaseType presetEase) {
         return presetEase switch {
             EaseType.Linear => Easing.Linear,

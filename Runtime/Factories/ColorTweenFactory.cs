@@ -9,7 +9,7 @@ public class ColorTweenFactory<T> :
     ICompositeTweenFactory<Color, T, float, HSV>
 {
     public ColorTweenFactory(Func<T, Color> getter, Action<T, Color> setter) 
-        : base(getter, setter, LerpUtil.Lerp) { }
+        : base(getter, setter, Color.LerpUnclamped) { }
 
     public void SetPart(ref Color composite, RGBA part, float value) => composite[(int)part] = value;
     public float GetPart(Color composite, RGBA part) => composite[(int)part];
@@ -38,7 +38,7 @@ public class ColorTweenFactory<T> :
         };
     }
 
-    public float Lerp(float from, float to, float t) => LerpUtil.Lerp(from, to, t);
+    public float Lerp(float from, float to, float t) => Mathf.LerpUnclamped(from, to, t);
 
     public ICompositeTweenFactory<Color, T, float, RGBA> AsRGBA() => this;
     public ICompositeTweenFactory<Color, T, float, HSV> AsHSV() => this;
