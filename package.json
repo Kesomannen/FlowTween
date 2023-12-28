@@ -3,7 +3,10 @@
     "version": "1.0.0",
     "displayName": "FlowTween",
     "description": "Extensible and easy-to-use tweening library.",
-    "unity": "2021.1",
+    "unity": "2022.3",
+    "license": "MIT",
+    "homepage": "https://github.com/Kesomannen/FlowTween",
+    "documentationUrl": "https://github.com/Kesomannen/FlowTween/wiki",
     "keywords": [
         "tween",
         "tweening",
