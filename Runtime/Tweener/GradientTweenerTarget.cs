@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace FlowTween.Components {
 
+/// <summary>
+/// A tweener target that tweens a <see cref="Color"/> property according to a <see cref="Gradient"/>.
+/// </summary>
+/// <typeparam name="T">The type of the component that holds the property.</typeparam>
 public class GradientTweenerTarget<T> : ITweenerTarget<Color, T, GradientData> where T : Component {
     readonly Func<T, Color> _getter;
     readonly Action<T, Color> _setter;
@@ -39,6 +43,8 @@ public class GradientTweenerTarget<T> : ITweenerTarget<Color, T, GradientData> w
 
 [Serializable]
 public class GradientData {
+    // Gradient won't show using SerializeReference
+    // so we have wrap it :/
     public Gradient Gradient;
 } 
 

@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace FlowTween.Editor {
 
 [CustomPropertyDrawer(typeof(GradientData))]
-public class GradientDataDrawer : PropertyDrawer {
+internal class GradientDataDrawer : PropertyDrawer {
     public override VisualElement CreatePropertyGUI(SerializedProperty property) {
         return new PropertyField(property.FindPropertyRelative("Gradient"));
     }

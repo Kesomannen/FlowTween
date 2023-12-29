@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace FlowTween {
 
+/// <summary>
+/// Standard easing functions.
+/// Visit https://easings.net/ for a visual representation of each of the functions.
+/// </summary>
 public static class Easing {
     const float HalfPI = Mathf.PI / 2;
     

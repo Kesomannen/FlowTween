@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace FlowTween.Editor {
 
 [CustomPropertyDrawer(typeof(TweenSettings))]
-public class TweenSettingsDrawer : PropertyDrawer {
+internal class TweenSettingsDrawer : PropertyDrawer {
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
         if (!property.isExpanded) {
             return EditorGUIUtility.singleLineHeight * 3;

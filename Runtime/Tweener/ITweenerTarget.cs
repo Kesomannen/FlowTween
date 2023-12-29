@@ -3,24 +3,67 @@ using UnityEngine;
 
 namespace FlowTween.Components {
 
+/// <summary>
+/// Interface to create tween targets for the <see cref="Tweener"/> component.
+/// The type safe <see cref="ITweenerTarget{T,THolder,TData}"/> should be implemented instead of this interface.
+/// </summary>
 public interface ITweenerTarget {
+    /// <summary>
+    /// The component type that holds the tween.
+    /// </summary>
     Type ComponentType { get; }
+    
+    /// <summary>
+    /// Takes a snapshot of the target property.
+    /// </summary>
     object TakeSnapshot(Component component);
+    
+    /// <summary>
+    /// Applies a snapshot of the target property.
+    /// </summary>
     void ApplySnapshot(Component component, object snapshot);
 
+    /// <summary>
+    /// Gets a new data object for this target.
+    /// </summary>
+    /// <returns></returns>
     object GetData();
+    
+    /// <summary>
+    /// Gets a tween for this target, using the given data and holder component.
+    /// </summary>
     TweenBase GetTween(Component component, object data);
+    
+    /// <summary>
+    /// Draws gizmos for this target, using the given data and holder component.
+    /// <see cref="Tweener"/> calls this for selected tweens every OnDrawGizmosSelected call.
+    /// </summary>
     virtual void OnDrawGizmos(Component component, object data) { }
 }
 
+/// <summary>
+/// Implement this interface to create a custom tween target type for the <see cref="Tweener"/> component.
+/// For targets that simply tween betwen two values, use <see cref="FromToTweenerTarget{T,THolder,TData}"/>
+/// or one of its subclasses instead.
+/// </summary>
+/// <typeparam name="T">The tween value type.</typeparam>
+/// <typeparam name="THolder">The type of the component that holds the property.</typeparam>
+/// <typeparam name="TData">
+/// A serializable data type that holds the configuration of the target.
+/// Cannot be generic, as it is serialized using <see cref="SerializeReference"/>.
+/// </typeparam>
 public interface ITweenerTarget<T, in THolder, in TData> : ITweenerTarget 
     where THolder : Component
     where TData : class
 {
+    /// <inheritdoc cref="ITweenerTarget.TakeSnapshot"/>
     T TakeSnapshot(THolder holder);
+    /// <inheritdoc cref="ITweenerTarget.ApplySnapshot"/>
     void ApplySnapshot(THolder holder, T snapshot);
-
+    
+    /// <inheritdoc cref="ITweenerTarget.GetData"/>
     TweenBase GetTween(THolder holder, TData data);
+    /// <inheritdoc cref="ITweenerTarget.OnDrawGizmos"/>
     virtual void OnDrawGizmos(THolder holder, TData data) { }
 
     Type ITweenerTarget.ComponentType => typeof(THolder);

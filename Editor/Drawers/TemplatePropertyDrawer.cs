@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace FlowTween.Editor {
-
+    
 public abstract class TemplatePropertyDrawer<T, TAsset, TProperty> : PropertyDrawer
     where T : class
     where TAsset : TemplateAsset<T> 

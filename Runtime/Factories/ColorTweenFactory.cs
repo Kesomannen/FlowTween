@@ -3,13 +3,39 @@ using UnityEngine;
 
 namespace FlowTween {
 
+/// <summary>
+/// A factory for creating tweens that animate <see cref="Color"/> properties.
+/// Also implements composite interfaces for animating RGBA and HSV parts of
+/// the <see cref="Color"/>.
+/// </summary>
+/// <typeparam name="T">The type of the object that holds the property. Most commonly an <see cref="UnityEngine.Object"/>.</typeparam>
+/// <example>
+/// <code>
+/// var factory = new ColorTweenFactory&lt;Material&gt;(
+///     material => material.color,
+///     (material, color) => material.color = color
+/// );
+/// 
+/// // Tween the material's color to blue over 1 second
+/// material
+///     .Tween(factory, Color.blue)
+///     .SetDuration(1);
+///
+/// 
+/// // Tween the material's saturation to 0.5 over 1 second with an ease
+/// material
+///     .Tween(factory.AsHSV(), HSV.S, 0.5f)
+///     .SetDuration(1)
+///     .Ease(EaseType.CubicInOut);
+/// </code>
+/// </example>
 public class ColorTweenFactory<T> : 
     TweenFactory<Color, T>, 
     ICompositeTweenFactory<Color, T, float, RGBA>,
     ICompositeTweenFactory<Color, T, float, HSV>
 {
     public ColorTweenFactory(Func<T, Color> getter, Action<T, Color> setter) 
-        : base(getter, setter, LerpUtil.Lerp) { }
+        : base(getter, setter, Color.LerpUnclamped) { }
 
     public void SetPart(ref Color composite, RGBA part, float value) => composite[(int)part] = value;
     public float GetPart(Color composite, RGBA part) => composite[(int)part];
@@ -38,18 +64,62 @@ public class ColorTweenFactory<T> :
         };
     }
 
-    public float Lerp(float from, float to, float t) => LerpUtil.Lerp(from, to, t);
+    public float Lerp(float from, float to, float t) => Mathf.LerpUnclamped(from, to, t);
 
+    /// <summary>
+    /// Casts this factory to a composite factory for animating RGBA parts of the <see cref="Color"/>.
+    /// </summary>
     public ICompositeTweenFactory<Color, T, float, RGBA> AsRGBA() => this;
+    
+    /// <summary>
+    /// Casts this factory to a composite factory for animating HSV parts of the <see cref="Color"/>.
+    /// </summary>
     public ICompositeTweenFactory<Color, T, float, HSV> AsHSV() => this;
 }
 
+/// <summary>
+/// Parts of a Color.
+/// </summary>
 public enum RGBA {
-    R, G, B, A
+    /// <summary>
+    /// Red value (0-1).
+    /// </summary>
+    R,
+    
+    /// <summary>
+    /// Green value (0-1).
+    /// </summary>
+    G,
+    
+    /// <summary>
+    /// Blue value (0-1).
+    /// </summary>
+    B,
+    
+    /// <summary>
+    /// Alpha value (0-1).
+    /// </summary>
+    A
 }
 
+/// <summary>
+/// Parts of a Color in HSV space.
+/// </summary>
 public enum HSV {
-    H, S, V
+    /// <summary>
+    /// Hue value (0-1).
+    /// </summary>
+    H,
+    
+    /// <summary>
+    /// Saturation value (0-1).
+    /// </summary>
+    S, 
+    
+    /// <summary>
+    /// Brightness value (0-1) (also known as Value).
+    /// </summary>
+    V
 }
 
 }

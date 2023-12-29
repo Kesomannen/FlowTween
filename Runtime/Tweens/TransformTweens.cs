@@ -4,14 +4,14 @@ using UnityEngine;
 namespace FlowTween {
 
 public static class TransformTweens {
-    public static TransformTweenFactory Position { get; } = new(t => t.position, (t, v) => t.position = v);
-    public static TransformTweenFactory LocalPosition { get; } = new(t => t.localPosition, (t, v) => t.localPosition = v);
-    public static TransformTweenFactory Scale { get; } = new(t => t.localScale, (t, v) => t.localScale = v);
+    public static Vector3TweenFactory<Transform> Position { get; } = new(t => t.position, (t, v) => t.position = v);
+    public static Vector3TweenFactory<Transform> LocalPosition { get; } = new(t => t.localPosition, (t, v) => t.localPosition = v);
+    public static Vector3TweenFactory<Transform> Scale { get; } = new(t => t.localScale, (t, v) => t.localScale = v);
     public static FloatTweenFactory<Transform> UniformScale { get; } = new(t => t.localScale.x, (t, v) => t.localScale = Vector3.one * v);
     public static QuaternionTweenFactory<Transform> Rotation { get; } = new(t => t.rotation, (t, v) => t.rotation = v);
     public static QuaternionTweenFactory<Transform> LocalRotation { get; } = new(t => t.localRotation, (t, v) => t.localRotation = v);
-    public static TransformTweenFactory EulerAngles { get; } = new(t => t.eulerAngles, (t, v) => t.eulerAngles = v);
-    public static TransformTweenFactory LocalEulerAngles { get; } = new(t => t.localEulerAngles, (t, v) => t.localEulerAngles = v);
+    public static Vector3TweenFactory<Transform> EulerAngles { get; } = new(t => t.eulerAngles, (t, v) => t.eulerAngles = v);
+    public static Vector3TweenFactory<Transform> LocalEulerAngles { get; } = new(t => t.localEulerAngles, (t, v) => t.localEulerAngles = v);
 
     static readonly Axis[] _2d = { Axis.X, Axis.Y };
     
@@ -44,10 +44,6 @@ public static class TransformTweens {
     public static Tween<float> TweenLocalRotationX(this Transform transform, float x) => transform.Tween(LocalEulerAngles, Axis.X, x);
     public static Tween<float> TweenLocalRotationY(this Transform transform, float y) => transform.Tween(LocalEulerAngles, Axis.Y, y);
     public static Tween<float> TweenLocalRotationZ(this Transform transform, float z) => transform.Tween(LocalEulerAngles, Axis.Z, z);
-}
-
-public class TransformTweenFactory : Vector3TweenFactory<Transform> {
-    public TransformTweenFactory(Func<Transform, Vector3> getter, Action<Transform, Vector3> setter) : base(getter, setter) { }
 }
 
 }

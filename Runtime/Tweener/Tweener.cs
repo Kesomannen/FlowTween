@@ -1,17 +1,27 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace FlowTween.Components {
 
+/// <summary>
+/// Component for creating tweens in the editor.
+/// </summary>
 public class Tweener : MonoBehaviour, IOnDisableRoutine {
     [SerializeField] private List<TweenerTargetConfig> _tweens = new();
     [SerializeField] bool _preventOverlapping;
     
+    /// <summary>
+    /// List of tween configurations in this tweener.
+    /// </summary>
     public List<TweenerTargetConfig> Tweens => _tweens;
     
+    /// <summary>
+    /// Whether or not to prevent multiple tweens from running at the same time,
+    /// unless they were started at the same time.
+    /// </summary>
     public bool PreventOverlapping {
         get => _preventOverlapping;
         set => _preventOverlapping = value;
@@ -31,7 +41,7 @@ public class Tweener : MonoBehaviour, IOnDisableRoutine {
 
     void Reset() {
         _tweens.Clear();
-        AddTween();
+        AddTween(out _);
     }
 
     void OnDrawGizmosSelected() {
@@ -40,24 +50,47 @@ public class Tweener : MonoBehaviour, IOnDisableRoutine {
         }
     }
 
+    /// <summary>
+    /// Plays the tween at the given index of the <see cref="Tweens"/> list.
+    /// </summary>
+    /// <remarks>
+    /// Does not return anything to be compatible with <see cref="UnityEvent"/>s.
+    /// If you need to get the resulting tween, use <see cref="PlayTween(int)"/> instead.
+    /// </remarks>
     public void Play(int index) {
         PlayTween(index);
     }
 
+    /// <summary>
+    /// Plays all tweens in this tweener.
+    /// </summary>
+    /// <remarks>
+    /// Does not return anything to be compatible with <see cref="UnityEvent"/>s
+    /// and to avoid unnecessary allocations.
+    /// </remarks>
     public void PlayAll() {
         PlayTweens(_tweens);
     }
 
-    public TweenBase PlayTween(TweenerTargetConfig tween) {
-        BeforePlay();
-        return PlayTweenInternal(tween);
-    }
-
+    /// <summary>
+    /// Plays the tween at the given index of the <see cref="Tweens"/> list.
+    /// </summary>
     public TweenBase PlayTween(int index) {
         BeforePlay();
         return PlayTweenInternal(index);
     }
     
+    /// <summary>
+    /// Plays the given tween configuration.
+    /// </summary>
+    public TweenBase PlayTween(TweenerTargetConfig tween) {
+        BeforePlay();
+        return PlayTweenInternal(tween);
+    }
+
+    /// <summary>
+    /// Plays the given tween configurations.
+    /// </summary>
     public void PlayTweens(IEnumerable<TweenerTargetConfig> tweens) {
         BeforePlay();
         foreach (var tween in tweens) {
@@ -65,6 +98,9 @@ public class Tweener : MonoBehaviour, IOnDisableRoutine {
         }
     }
     
+    /// <summary>
+    /// Plays the tweens at the given indices of the <see cref="Tweens"/> list.
+    /// </summary>
     public void PlayTweens(IEnumerable<int> indices) {
         BeforePlay();
         foreach (var index in indices) {
@@ -72,11 +108,18 @@ public class Tweener : MonoBehaviour, IOnDisableRoutine {
         }
     }
 
+    /// <summary>
+    /// Plays the given tween configurations and returns the resulting tweens.
+    /// </summary>
     public TweenBase[] PlayTweensAndReturn(IEnumerable<TweenerTargetConfig> tweens) {
         BeforePlay();
         return tweens.Select(PlayTweenInternal).ToArray();
     }
 
+    /// <summary>
+    /// Plays the tweens at the given indices of the <see cref="Tweens"/> list
+    /// and returns the resulting tweens.
+    /// </summary>
     public TweenBase[] PlayTweensAndReturn(IEnumerable<int> indices) {
         BeforePlay();
         return indices.Select(PlayTweenInternal).ToArray();
@@ -102,22 +145,34 @@ public class Tweener : MonoBehaviour, IOnDisableRoutine {
         }
     }
 
+    /// <summary>
+    /// Adds a tween configuration to this tweener.
+    /// </summary>
+    /// <returns>The index of the tween in the <see cref="Tweens"/> list.</returns>
     public int AddTween(TweenerTargetConfig tween) {
         _tweens.Add(tween);
-        tween.Init();
         return _tweens.Count - 1;
     }
     
-    public TweenerTargetConfig AddTween() {
+    /// <summary>
+    /// Creates a new tween and adds it to this tweener.
+    /// </summary>
+    public TweenerTargetConfig AddTween(out int index) {
         var tween = new TweenerTargetConfig();
-        AddTween(tween);
+        index = AddTween(tween);
         return tween;
     }
     
+    /// <summary>
+    /// Removes the given tween from this tweener.
+    /// </summary>
     public bool RemoveTween(TweenerTargetConfig tween) {
         return _tweens.Remove(tween);
     }
     
+    /// <summary>
+    /// Removes the tween at the given index from this tweener.
+    /// </summary>
     public bool RemoveTween(int index) {
         if (index < 0 || index >= _tweens.Count)
             return false;
@@ -125,8 +180,8 @@ public class Tweener : MonoBehaviour, IOnDisableRoutine {
         _tweens.RemoveAt(index);
         return true;
     }
-    
-    public IEnumerator OnDisableRoutine() {
+
+    IEnumerator IOnDisableRoutine.OnDisableRoutine() {
         if (!_tweens.Any(tween => tween.PlayOnDisable)) yield break;
         var toPlay = _tweens.Where(tween => tween.PlayOnDisable).ToArray();
         
