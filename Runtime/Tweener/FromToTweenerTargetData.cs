@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace FlowTween.Components {
 
+/// <summary>
+/// Simple implementation of <see cref="IFromToTweenerTargetData{T}"/>.
+/// Has to be abstract due to <see cref="SerializeReference"/> not working on generic types.
+/// </summary>
+/// <typeparam name="T">The tween value type.</typeparam>
 [Serializable]
 public abstract class FromToTweenerTargetData<T> : IFromToTweenerTargetData<T> {
     [SerializeField] T _start;

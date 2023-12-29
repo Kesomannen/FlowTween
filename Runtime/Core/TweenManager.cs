@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -21,6 +22,7 @@ public class TweenManager : MonoBehaviour {
     /// The singleton instance of the <see cref="TweenManager"/>.
     /// It's not recommended to use this directly, instead use <see cref="TweenManager.TryAccess"/>.
     /// </summary>
+    [CanBeNull]
     public static TweenManager Singleton {
         get {
             if (!Application.isPlaying) {

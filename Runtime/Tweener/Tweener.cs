@@ -41,7 +41,7 @@ public class Tweener : MonoBehaviour, IOnDisableRoutine {
 
     void Reset() {
         _tweens.Clear();
-        AddTween();
+        AddTween(out _);
     }
 
     void OnDrawGizmosSelected() {
@@ -151,16 +151,15 @@ public class Tweener : MonoBehaviour, IOnDisableRoutine {
     /// <returns>The index of the tween in the <see cref="Tweens"/> list.</returns>
     public int AddTween(TweenerTargetConfig tween) {
         _tweens.Add(tween);
-        tween.Init();
         return _tweens.Count - 1;
     }
     
     /// <summary>
     /// Creates a new tween and adds it to this tweener.
     /// </summary>
-    public TweenerTargetConfig AddTween() {
+    public TweenerTargetConfig AddTween(out int index) {
         var tween = new TweenerTargetConfig();
-        AddTween(tween);
+        index = AddTween(tween);
         return tween;
     }
     

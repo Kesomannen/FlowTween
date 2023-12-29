@@ -4,9 +4,8 @@ using UnityEngine;
 namespace FlowTween.Components {
 
 /// <summary>
-/// Implement this interface to create a custom tween target type for the <see cref="Tweener"/> component.
-/// For most use cases inheriting from <see cref="FromToTweenerTarget{T,THolder,TData}"/> is enough and avoids a lot of boilerplate.
-/// Otherwise, the type safe <see cref="ITweenerTarget{T,THolder,TData}"/> should be used.
+/// Interface to create tween targets for the <see cref="Tweener"/> component.
+/// The type safe <see cref="ITweenerTarget{T,THolder,TData}"/> should be implemented instead of this interface.
 /// </summary>
 public interface ITweenerTarget {
     /// <summary>
@@ -15,12 +14,12 @@ public interface ITweenerTarget {
     Type ComponentType { get; }
     
     /// <summary>
-    /// Takes a snapshot of the tweened values.
+    /// Takes a snapshot of the target property.
     /// </summary>
     object TakeSnapshot(Component component);
     
     /// <summary>
-    /// Applies a snapshot of the previously captured tweened values.
+    /// Applies a snapshot of the target property.
     /// </summary>
     void ApplySnapshot(Component component, object snapshot);
 
@@ -48,9 +47,9 @@ public interface ITweenerTarget {
 /// or one of its subclasses instead.
 /// </summary>
 /// <typeparam name="T">The tween value type.</typeparam>
-/// <typeparam name="THolder">The component type that holds the tween.</typeparam>
+/// <typeparam name="THolder">The type of the component that holds the property.</typeparam>
 /// <typeparam name="TData">
-/// A data type that holds the configuration of the target.
+/// A serializable data type that holds the configuration of the target.
 /// Cannot be generic, as it is serialized using <see cref="SerializeReference"/>.
 /// </typeparam>
 public interface ITweenerTarget<T, in THolder, in TData> : ITweenerTarget 

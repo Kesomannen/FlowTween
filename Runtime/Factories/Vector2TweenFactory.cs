@@ -3,6 +3,12 @@ using UnityEngine;
 
 namespace FlowTween {
 
+/// <summary>
+/// A factory for creating tweens that animate <see cref="Vector2"/> properties.
+/// Also implements a composite interface for animating individual parts of
+/// the <see cref="Vector2"/> by specifying an <see cref="Axis2"/>.
+/// </summary>
+/// <typeparam name="T">The type of the object that holds the property. Most commonly an <see cref="UnityEngine.Object"/>.</typeparam>
 public class Vector2TweenFactory<T> : 
     TweenFactory<Vector2, T>,
     ICompositeTweenFactory<Vector2, T, float, Axis2> 

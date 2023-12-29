@@ -51,7 +51,7 @@ public class TweenerEditor : UnityEditor.Editor {
         RebuildList();
         
         addButton.clicked += () => {
-            var tween = tweener.AddTween();
+            var tween = tweener.AddTween(out _);
             tween.PlayOnEnable = playOnEnableAll.value;
             
             EditorUtility.SetDirty(tweener);
