@@ -26,14 +26,16 @@ Not too familiar with all the ease types? You can preview them right in the edit
 
 ![FlowTweenExample2](https://github.com/Kesomannen/FlowTween/assets/113015915/04e8b1d4-70d8-4370-904c-c6ef03c676ad)
 
-<b>Note! FlowTween is not fully compatible with IMGUI. If you have an IMGUI custom editor,
+<b>Note: FlowTween is not fully compatible with IMGUI. If you have an IMGUI custom editor,
 or a package like NaughtyAttributes which overrides all editors, the tween preview will not show.</b>
 
 Prefer a no-code approach? The `Tweener` component can tween tons of properties without a single line of code!
 
 ![FlowTweenExample](https://github.com/Kesomannen/FlowTween/assets/113015915/ce41dd06-44ce-4132-b672-57f4d86bdb70)
 
-<b>Note! The Tweener component is fully incompatible with IMGUI.</b>
+<b>Note: The Tweener component is fully incompatible with IMGUI.</b>
+
+Check out the [wiki](https://github.com/Kesomannen/FlowTween/wiki) for more examples and thorough documentation of all the features.
 
 ## Installation
 
