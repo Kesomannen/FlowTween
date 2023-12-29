@@ -1,6 +1,6 @@
 {
     "name": "Kesomannen.FlowTween.Editor",
-    "rootNamespace": "",
+    "rootNamespace": "FlowTween.Editor",
     "references": [
         "GUID:874ca8c9aeefc51449b7d23c982034f6"
     ],

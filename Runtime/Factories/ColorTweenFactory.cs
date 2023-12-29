@@ -77,12 +77,49 @@ public class ColorTweenFactory<T> :
     public ICompositeTweenFactory<Color, T, float, HSV> AsHSV() => this;
 }
 
+/// <summary>
+/// Parts of a Color.
+/// </summary>
 public enum RGBA {
-    R, G, B, A
+    /// <summary>
+    /// Red value (0-1).
+    /// </summary>
+    R,
+    
+    /// <summary>
+    /// Green value (0-1).
+    /// </summary>
+    G,
+    
+    /// <summary>
+    /// Blue value (0-1).
+    /// </summary>
+    B,
+    
+    /// <summary>
+    /// Alpha value (0-1).
+    /// </summary>
+    A
 }
 
+/// <summary>
+/// Parts of a Color in HSV space.
+/// </summary>
 public enum HSV {
-    H, S, V
+    /// <summary>
+    /// Hue value (0-1).
+    /// </summary>
+    H,
+    
+    /// <summary>
+    /// Saturation value (0-1).
+    /// </summary>
+    S, 
+    
+    /// <summary>
+    /// Brightness value (0-1) (also known as Value).
+    /// </summary>
+    V
 }
 
 }

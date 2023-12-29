@@ -3,18 +3,41 @@ using UnityEditor;
 
 namespace FlowTween.Editor {
 
+/// <summary>
+/// A helper class for previewing tweens in the editor.
+/// </summary>
 public class TweenPreview {
     TweenBase[] _tweens;
     int _playCount;
     float _lastUpdate;
     
+    /// <summary>
+    /// Are any tweens currently playing?
+    /// </summary>
     public bool IsPlaying { get; private set; }
 
     static float Time => (float)EditorApplication.timeSinceStartup;
 
+    /// <summary>
+    /// Called when a tween is started or stopped.
+    /// </summary>
     public event Action<TweenBase> OnTweenStoppedOrRestarted;
-    public event Action OnStartedPlaying, OnStoppedPlaying;
+
+    /// <summary>
+    /// Called when the preview starts playing.
+    /// </summary>
+    public event Action OnStartedPlaying;
     
+    /// <summary>
+    /// Called when all tweens have stopped playing.
+    /// </summary>
+    public event Action OnStoppedPlaying;
+    
+    /// <summary>
+    /// Plays the given tweens.
+    /// If any tweens are already playing, they will be stopped
+    /// or restarted, depending on if they are in the new list.
+    /// </summary>
     public void Play(params TweenBase[] tweens) {
         _tweens = tweens; 
         _playCount = tweens.Length;
@@ -45,6 +68,9 @@ public class TweenPreview {
         }
     }
 
+    /// <summary>
+    /// Stops the tween at the given index.
+    /// </summary>
     public void Stop(int tweenIndex) {
         if (!IsPlaying) return;
         
@@ -61,6 +87,9 @@ public class TweenPreview {
         }
     }
 
+    /// <summary>
+    /// Stops all tweens.
+    /// </summary>
     public void StopAll() {
         if (!IsPlaying) return;
         foreach (var tween in _tweens) {

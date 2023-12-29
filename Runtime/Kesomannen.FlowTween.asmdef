@@ -1,6 +1,6 @@
 {
     "name": "Kesomannen.FlowTween",
-    "rootNamespace": "",
+    "rootNamespace": "FlowTween",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

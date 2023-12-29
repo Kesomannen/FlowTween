@@ -22,6 +22,9 @@ public class Vector2TweenFactory<T> :
     public float Lerp(float from, float to, float t) => Mathf.LerpUnclamped(from, to, t);
 }
 
+/// <summary>
+/// Parts of a Vector2.
+/// </summary>
 public enum Axis2 {
     X, Y
 }

@@ -128,7 +128,7 @@ public class TweenManager : MonoBehaviour {
     /// </summary>
     /// <param name="obj">
     /// The owner of the tweens to cancel.
-    /// ny tweens owned by components on this are also cancelled.
+    /// Any tweens owned by components on this are also cancelled.
     /// </param>
     /// <param name="callOnComplete">Whether or not to call the tweens' <see cref="TweenBase.CompleteAction"/></param>
     public void CancelObject(GameObject obj, bool callOnComplete = false) {
