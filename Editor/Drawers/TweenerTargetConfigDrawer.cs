@@ -60,9 +60,9 @@ internal class TweenerTargetConfigDrawer : PropertyDrawer {
                 previewButton.SetEnabled(false);
                 return root;
             }
-        }
+        } 
 
-        var preview = new TweenPreview();
+        var preview = new TweenPreview(root);
         preview.OnTweenStoppedOrRestarted += _ => {
             config.ApplySnapshot(gameObject);
         };

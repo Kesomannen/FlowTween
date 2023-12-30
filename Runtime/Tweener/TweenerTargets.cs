@@ -75,10 +75,10 @@ public static class TweenerTargets {
         { "RectTransformSizeDelta", new Vector2FromToTweenerTarget<RectTransform>(RectTransformTweens.SizeDelta) },
         { "GraphicColor", new ColorFromToTweenerTarget<Graphic>(GraphicTweens.Color) },
         { "GraphicAlpha", new FloatFromToTweenerTarget<Graphic>(GraphicTweens.Color.AsRGBA().WithPart(RGBA.A)) },
-        { "GraphicGradient", new GradientTweenerTarget<Graphic>(GraphicTweens.Color) },
+        { "GraphicColor (Gradient)", new GradientTweenerTarget<Graphic>(GraphicTweens.Color) },
         { "CanvasGroupAlpha", new FloatFromToTweenerTarget<CanvasGroup>(CanvasGroupTweens.Alpha) },
         { "SpriteRendererColor", new ColorFromToTweenerTarget<SpriteRenderer>(SpriteRendererTweens.Color) },
-        { "SpriteRendererGradient", new GradientTweenerTarget<SpriteRenderer>(SpriteRendererTweens.Color) },
+        { "SpriteRendererColor (Gradient)", new GradientTweenerTarget<SpriteRenderer>(SpriteRendererTweens.Color) },
         { "CameraFieldOfView", new FloatFromToTweenerTarget<Camera>(CameraTweens.FieldOfView) }
     };
 }

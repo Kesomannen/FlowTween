@@ -99,7 +99,7 @@ public static class TweenFactoryTweenExtensions {
     /// Creates a tween with a factory and sets its <see cref="Tween{T}.End"/> value.
     /// </summary>
     /// <param name="holder">
-    /// The target object. Also used as the tween's owner if it's a <see cref="Component"/> or <see cref="GameObject"/>
+    /// The target object. Also used as the tween's owner (see <see cref="TweenManager.NewTween{T}"/>).
     /// </param>
     /// <param name="factory">The factory to use.</param>
     /// <param name="to">The <see cref="Tween{T}.End"/> value of the tween.</param>

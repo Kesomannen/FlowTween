@@ -69,8 +69,8 @@ internal class TweenSettingsDrawer : PropertyDrawer {
                 duration.value = 0;
             }
         });
-        
-        var preview = new TweenPreview();
+
+        var preview = new TweenPreview(root);
         var previewButton = root.Q<Button>("preview-button");
         var previewIcon = previewButton.Q<MaterialIcon>();
         

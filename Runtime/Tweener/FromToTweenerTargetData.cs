@@ -1,54 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace FlowTween.Components {
 
-/// <summary>
-/// Simple implementation of <see cref="IFromToTweenerTargetData{T}"/>.
-/// Has to be abstract due to <see cref="SerializeReference"/> not working on generic types.
-/// </summary>
-/// <typeparam name="T">The tween value type.</typeparam>
 [Serializable]
-public abstract class FromToTweenerTargetData<T> : IFromToTweenerTargetData<T> {
-    [SerializeField] T _start;
-    [SerializeField] bool _startRelative = true;
-    [SerializeField] T _end;
-    [SerializeField] bool _endRelative = true;
-    
-    protected abstract T Add(T a, T b);
-    
-    public T GetStartValue(T current) {
-        return GetValue(current, _start, _startRelative);
-    }
+public class FromToTweenerTargetValue<T> {
+    public bool Relative = true;
+    public T Value;
+    public string OperationName;
+    public Component Source;
+}
 
-    public T GetEndValue(T current) {
-        return GetValue(current, _end, _endRelative);
+[Serializable]
+public abstract class FromToTweenerTargetData<T> {
+    [SerializeField] FromToTweenerTargetValue<T> _start = new();
+    [SerializeField] FromToTweenerTargetValue<T> _end = new();
+    [SerializeField] string _sourceTypeName;
+    
+    public FromToTweenerTargetValue<T> Start => _start;
+    public FromToTweenerTargetValue<T> End => _end;
+    
+    public void Init(Type componentType) {
+        _sourceTypeName = componentType.AssemblyQualifiedName;
+        
+        var operation = GetOperations().Keys.First();
+        _start.OperationName = operation;
+        _end.OperationName = operation;
     }
     
-    T GetValue(T current, T value, bool relative) {
-        return relative ? Add(current, value) : value;
-    }
+    public abstract IReadOnlyDictionary<string, Func<T, T, T>> GetOperations();
 }
 
 [Serializable]
 public class Vector3TweenerTargetData : FromToTweenerTargetData<Vector3> {
-    protected override Vector3 Add(Vector3 a, Vector3 b) => a + b;
+    public static IReadOnlyDictionary<string, Func<Vector3, Vector3, Vector3>> Operations = new Dictionary<string, Func<Vector3, Vector3, Vector3>> {
+        { "Add", (a, b) => a + b },
+        { "Subtract", (a, b) => a - b }
+    };
+    
+    public override IReadOnlyDictionary<string, Func<Vector3, Vector3, Vector3>> GetOperations() => Operations;
 }
 
 [Serializable]
 public class Vector2TweenerTargetData : FromToTweenerTargetData<Vector2> {
-    protected override Vector2 Add(Vector2 a, Vector2 b) => a + b;
-}
-
-[Serializable]
-public class FloatTweenerTargetData : FromToTweenerTargetData<float> {
-    protected override float Add(float a, float b) => a + b;
+    public static IReadOnlyDictionary<string, Func<Vector2, Vector2, Vector2>> Operations = new Dictionary<string, Func<Vector2, Vector2, Vector2>> {
+        { "Add", (a, b) => a + b } ,
+        { "Subtract", (a, b) => a - b } ,
+        { "Multiply", (a, b) => a * b } ,
+        { "Divide", (a, b) => a / b }
+    };
+    
+    public override IReadOnlyDictionary<string, Func<Vector2, Vector2, Vector2>> GetOperations() => Operations;
 }
 
 [Serializable]
 public class ColorTweenerTargetData : FromToTweenerTargetData<Color> {
-    protected override Color Add(Color a, Color b) => a * b;
+    public static IReadOnlyDictionary<string, Func<Color, Color, Color>> Operations = new Dictionary<string, Func<Color, Color, Color>> {
+        { "Multiply", (a, b) => a * b },
+        { "Add", (a, b) => a + b },
+        { "Subtract", (a, b) => a - b }
+    };
+    
+    public override IReadOnlyDictionary<string, Func<Color, Color, Color>> GetOperations() => Operations;
+}
+
+[Serializable]
+public class FloatTweenerTargetData : FromToTweenerTargetData<float> {
+    public static IReadOnlyDictionary<string, Func<float, float, float>> Operations = new Dictionary<string, Func<float, float, float>> {
+        { "Add", (a, b) => a + b },
+        { "Subtract", (a, b) => a - b },
+        { "Multiply", (a, b) => a * b },
+        { "Divide", (a, b) => a / b }
+    };
+    
+    public override IReadOnlyDictionary<string, Func<float, float, float>> GetOperations() => Operations;
 }
 
 }

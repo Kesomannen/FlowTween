@@ -58,8 +58,8 @@ public class TweenerEditor : UnityEditor.Editor {
             serializedObject.Update();
             RebuildList();
         };
-        
-        var preview = new TweenPreview();
+
+        var preview = new TweenPreview(root);
         IReadOnlyList<TweenerTargetConfig> previewingTweens = null;
         
         preview.OnStartedPlaying += () => {
