@@ -49,6 +49,16 @@ public abstract class TemplateProperty<T> {
             _useTemplate = false;
         }
     }
+
+    public TemplateProperty() { }
+    
+    public TemplateProperty(T value) {
+        InlineValue = value;
+    }
+    
+    public TemplateProperty(TemplateAsset<T> template) {
+        TemplateValue = template;
+    }
 }
 
 }

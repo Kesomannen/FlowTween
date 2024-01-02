@@ -85,7 +85,7 @@ public class Tween<T> : TweenBase {
     }
 
     /// <summary>
-    /// Set's <see cref="LerpFunction"/>.
+    /// Sets <see cref="LerpFunction"/>.
     /// </summary>
     public Tween<T> Lerp(Func<T, T, float, T> lerp) {
         LerpFunction = lerp;

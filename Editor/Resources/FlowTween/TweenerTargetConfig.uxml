@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Packages/com.kesomannen.flowtween/Editor/Resources/FlowTween/FlowTweenStyle.uss?fileID=7433441132597879392&amp;guid=1652f00bc0ccdfa47868f7330aac3e70&amp;type=3#FlowTweenStyle" />
     <ui:VisualElement style="flex-grow: 1;">
-        <ui:DropdownField label="Type" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="type-dropdown" class="unity-base-field__aligned" />
+        <ui:DropdownField label="Target" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="type-dropdown" class="unity-base-field__aligned" />
         <uie:PropertyField name="data-field" />
         <uie:PropertyField binding-path="_settings" />
         <ui:Toggle label="Play On Enable" binding-path="_playOnEnable" name="play-on-enable" tooltip="Whether or not to play the tween whenever OnEnable is called." class="unity-base-field__aligned" />

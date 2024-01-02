@@ -18,9 +18,22 @@ public abstract class FromToTweenerTargetData<T> {
     [SerializeField] FromToTweenerTargetValue<T> _start = new();
     [SerializeField] FromToTweenerTargetValue<T> _end = new();
     [SerializeField] string _sourceTypeName;
+
+    public FromToTweenerTargetValue<T> Start {
+        get => _start;
+        set => _start = value;
+    }
     
-    public FromToTweenerTargetValue<T> Start => _start;
-    public FromToTweenerTargetValue<T> End => _end;
+    public FromToTweenerTargetValue<T> End {
+        get => _end;
+        set => _end = value;
+    }
+
+    public FromToTweenerTargetData() { }
+
+    public FromToTweenerTargetData(Type componentType) {
+        Init(componentType);
+    }
     
     public void Init(Type componentType) {
         _sourceTypeName = componentType.AssemblyQualifiedName;
@@ -41,6 +54,10 @@ public class Vector3TweenerTargetData : FromToTweenerTargetData<Vector3> {
     };
     
     public override IReadOnlyDictionary<string, Func<Vector3, Vector3, Vector3>> GetOperations() => Operations;
+    
+    public Vector3TweenerTargetData() { }
+    public Vector3TweenerTargetData(Type componentType) : base(componentType) { }
+    public static Vector3TweenerTargetData Create<THolder>() where THolder : Component => new(typeof(THolder));
 }
 
 [Serializable]
@@ -53,6 +70,10 @@ public class Vector2TweenerTargetData : FromToTweenerTargetData<Vector2> {
     };
     
     public override IReadOnlyDictionary<string, Func<Vector2, Vector2, Vector2>> GetOperations() => Operations;
+    
+    public Vector2TweenerTargetData() { }
+    public Vector2TweenerTargetData(Type componentType) : base(componentType) { }
+    public static Vector2TweenerTargetData Create<THolder>() where THolder : Component => new(typeof(THolder));
 }
 
 [Serializable]
@@ -64,6 +85,10 @@ public class ColorTweenerTargetData : FromToTweenerTargetData<Color> {
     };
     
     public override IReadOnlyDictionary<string, Func<Color, Color, Color>> GetOperations() => Operations;
+    
+    public ColorTweenerTargetData() { }
+    public ColorTweenerTargetData(Type componentType) : base(componentType) { }
+    public static ColorTweenerTargetData Create<THolder>() where THolder : Component => new(typeof(THolder));
 }
 
 [Serializable]
@@ -76,6 +101,10 @@ public class FloatTweenerTargetData : FromToTweenerTargetData<float> {
     };
     
     public override IReadOnlyDictionary<string, Func<float, float, float>> GetOperations() => Operations;
+    
+    public FloatTweenerTargetData() { }
+    public FloatTweenerTargetData(Type componentType) : base(componentType) { }
+    public static FloatTweenerTargetData Create<THolder>() where THolder : Component => new(typeof(THolder));
 }
 
 }

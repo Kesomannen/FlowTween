@@ -44,9 +44,9 @@ public static class TweenBaseExtensions {
     /// <summary>
     /// Sets the tween's <see cref="TweenBase.CompleteAction"/>.
     /// </summary>
-    public static T OnComplete<T>(this T tween, Action action) where T : TweenBase {
-        tween.CompleteAction += action;
-        return tween;
+    public static T OnComplete<T>(this T runnable, Action action) where T : Runnable {
+        runnable.CompleteAction += action;
+        return runnable;
     }
     
     /// <summary>
@@ -74,8 +74,8 @@ public static class TweenBaseExtensions {
     /// <summary>
     /// Pauses the tween.
     /// </summary>
-    /// <seealso cref="TweenBase.IsPaused"/>
-    public static T Pause<T>(this T tween) where T : TweenBase {
+    /// <seealso cref="Runnable.IsPaused"/>
+    public static T Pause<T>(this T tween) where T : Runnable {
         tween.IsPaused = true;
         return tween;
     }
@@ -83,8 +83,8 @@ public static class TweenBaseExtensions {
     /// <summary>
     /// Resumes the tween.
     /// </summary>
-    /// <seealso cref="TweenBase.IsPaused"/>
-    public static T Resume<T>(this T tween) where T : TweenBase {
+    /// <seealso cref="Runnable.IsPaused"/>
+    public static T Resume<T>(this T tween) where T : Runnable {
         tween.IsPaused = false;
         return tween;
     }

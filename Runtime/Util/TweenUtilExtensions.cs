@@ -23,13 +23,21 @@ public static class TweenUtilExtensions {
         return obj;
     }
     
+    static T Get<T>(this Object obj) where T : Runnable, new() {
+        return TweenManager.TryAccess(manager => manager.Get<T>(obj), out var tween) ? tween : new T();
+    }
+    
+    public static Sequence Sequence(this Object obj) {
+        return obj.Get<Sequence>();
+    }
+    
     /// <summary>
     /// Creates a new tween on this object.
     /// If at runtime and <see cref="TweenManager"/> is enabled, the tween is created
     /// using <see cref="TweenManager.NewTween{T}"/>, otherwise the default constructor is used.
     /// </summary>
     public static Tween<T> Tween<T>(this Object obj) {
-        return TweenManager.TryAccess(manager => manager.NewTween<T>(obj), out var tween) ? tween : new Tween<T>();
+        return obj.Get<Tween<T>>();
     }
 
     /// <summary>
@@ -39,6 +47,11 @@ public static class TweenUtilExtensions {
     /// </summary>
     internal static Tween<T> Tween<T>(this Object obj, T to) {
         return obj.Tween<T>().To(to);
+    }
+    
+    /// <inheritdoc cref="ICompositeTweenFactory{T,THolder,TPart,TPartId}.WithPart"/>
+    public static ITweenFactory<TPart, THolder> WithPart<T, THolder, TPart, TPartId>(this ICompositeTweenFactory<T, THolder, TPart, TPartId>  factory, TPartId part) {
+        return factory.WithPart(part);
     }
 }
 

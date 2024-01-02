@@ -20,6 +20,8 @@ public class Vector3TweenFactory<T> :
     public float GetPart(Vector3 composite, Axis part) => composite[(int)part];
 
     public float Lerp(float from, float to, float t) => Mathf.LerpUnclamped(from, to, t);
+    
+    public ICompositeTweenFactory<Vector3, T, float, Axis> Composite => this;
 }
 
 public enum Axis {

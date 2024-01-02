@@ -6,6 +6,7 @@
 
 - `FromToTweenerTarget` now supports any binary operation
 - Ability to set another component to use as the source for `FromToTweenerTarget`
+- `SetTargetId`, `SetTargetUntyped` and `SetTarget` methods to `TweenerTargetConfig`
 
 ### Changed
 
