@@ -50,13 +50,13 @@ public abstract class TemplateProperty<T> {
         }
     }
 
-    public TemplateProperty() { }
-    
-    public TemplateProperty(T value) {
+    protected TemplateProperty() { }
+
+    protected TemplateProperty(T value) {
         InlineValue = value;
     }
-    
-    public TemplateProperty(TemplateAsset<T> template) {
+
+    protected TemplateProperty(TemplateAsset<T> template) {
         TemplateValue = template;
     }
 }

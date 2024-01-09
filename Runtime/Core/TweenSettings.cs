@@ -17,6 +17,7 @@ public class TweenSettings {
     [SerializeField] Ease _presetEase;
     [SerializeField] AnimationCurve _customEase;
     [SerializeField] LoopMode _loopMode;
+    [SerializeField] int _loopCount = -1;
 
     /// <summary>
     /// Duration in seconds, must be greater than 0.
@@ -82,6 +83,13 @@ public class TweenSettings {
         get => _loopMode;
         set => _loopMode = value;
     }
+    
+    public int? LoopCount {
+        get => _loopCount == -1 ? null : _loopCount;
+        set => _loopCount = value ?? -1;
+    }
+
+    public TweenSettings() { }
 
     public TweenSettings(float duration, Ease ease) {
         Duration = duration;
@@ -96,14 +104,12 @@ public class TweenSettings {
     /// <summary>
     /// Applies the settings to the given tween.
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <see cref="EaseType"/> is not a valid <see cref="EasingType"/> value
-    /// </exception>
     public void Apply(TweenBase tween) {
-        tween
-            .SetDuration(_duration)
-            .SetDelay(_delay)
-            .Loop(_loopMode);
+        tween.SetDuration(_duration);
+        
+        tween.Delay = _delay;
+        tween.LoopMode = _loopMode;
+        tween.Loops = LoopCount;
 
         switch (_easeType) {
             case EasingType.Preset:

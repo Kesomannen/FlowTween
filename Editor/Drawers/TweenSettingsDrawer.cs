@@ -23,7 +23,6 @@ internal class TweenSettingsDrawer : PropertyDrawer {
         rect.height = EditorGUIUtility.singleLineHeight;
         
         property.isExpanded = EditorGUI.Foldout(rect, property.isExpanded, label);
-
         
         if (property.isExpanded) {
             EditorGUI.indentLevel++;
@@ -56,10 +55,31 @@ internal class TweenSettingsDrawer : PropertyDrawer {
     public override VisualElement CreatePropertyGUI(SerializedProperty property) {
         var template = Resources.Load<VisualTreeAsset>("FlowTween/TweenSettings");
         var root = template.CloneTree();
-
+        
         root.Q<Foldout>().text = property.displayName;
         
         var presetEase = root.Q("preset-ease");
+        var presetEaseType = presetEase.Q<EnumField>("preset-ease-type");
+        var presetEaseDirection = presetEase.Q<EnumField>("preset-ease-direction");
+        
+        UpdatePresetEase(property.FindPropertyRelative("_presetEase.Type").enumValueIndex);
+        presetEaseType.RegisterValueChangedCallback(evt => UpdatePresetEase((int)(object)evt.newValue));
+        
+        var loopMode = root.Q<EnumField>("loop-mode");
+        var loopCount = root.Q<IntegerField>("loop-count");
+        var loopInfiniteButton = root.Q<Button>("loop-infinite-button");
+        
+        var loopCountProperty = property.FindPropertyRelative("_loopCount");
+        var loopModeProperty = property.FindPropertyRelative("_loopMode");
+        
+        loopMode.RegisterValueChangedCallback(_ => UpdateLoopMode());
+        loopInfiniteButton.clicked += () => {
+            loopCountProperty.intValue = loopCountProperty.intValue == -1 ? 2 : -1;
+            property.serializedObject.ApplyModifiedProperties();
+            UpdateLoopMode();
+        };
+        UpdateLoopMode();
+        
         var customEase = root.Q<CurveField>("custom-ease");
         var progressBar = root.Q<ProgressBar>("preview");
         
@@ -119,6 +139,23 @@ internal class TweenSettingsDrawer : PropertyDrawer {
                 .OnUpdate(value => progressBar.value = value)
                 .Apply(property.GetValue<TweenSettings>())
             );
+        }
+
+        void UpdateLoopMode() {
+            var infinite = loopCountProperty.intValue == -1;
+            if (infinite) {
+                loopInfiniteButton.AddToClassList("icon-button__selected");
+            }else {
+                loopInfiniteButton.RemoveFromClassList("icon-button__selected");
+            }
+            
+            var noneIsSelected = (LoopMode)loopModeProperty.enumValueIndex == LoopMode.None;
+            loopCount.SetEnabled(!noneIsSelected && !infinite); 
+            loopInfiniteButton.SetEnabled(!noneIsSelected);
+        }
+
+        void UpdatePresetEase(int index) {
+            presetEaseDirection.SetEnabled((EaseType)index != EaseType.Linear);
         }
     }
 }

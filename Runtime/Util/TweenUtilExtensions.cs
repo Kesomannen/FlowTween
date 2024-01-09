@@ -27,6 +27,11 @@ public static class TweenUtilExtensions {
         return TweenManager.TryAccess(manager => manager.Get<T>(obj), out var tween) ? tween : new T();
     }
     
+    /// <summary>
+    /// Creates a new sequence on this object.
+    /// If at runtime and <see cref="TweenManager"/> is enabled, the sequence is created
+    /// using <see cref="TweenManager.NewSequence"/>, otherwise the default constructor is used.
+    /// </summary>
     public static Sequence Sequence(this Object obj) {
         return obj.Get<Sequence>();
     }

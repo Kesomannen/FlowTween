@@ -5,7 +5,7 @@
             <uie:PropertyField binding-path="_start.Value" label="Start" style="flex-grow: 1;" />
             <ui:Label tabindex="-1" text="Relative?" parse-escape-sequences="true" display-tooltip-when-elided="true" class="relative-label" />
             <ui:Toggle binding-path="_start.Relative" name="relative-toggle" />
-            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="advanced-button">
+            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="advanced-button" class="icon-button-option">
                 <FlowTween.Editor.MaterialIcon tabindex="-1" icon="settings" />
             </ui:Button>
         </ui:VisualElement>
@@ -19,7 +19,7 @@
             <uie:PropertyField binding-path="_end.Value" label="End" style="flex-grow: 1;" />
             <ui:Label tabindex="-1" text="Relative?" parse-escape-sequences="true" display-tooltip-when-elided="true" class="relative-label" />
             <ui:Toggle binding-path="_end.Relative" name="relative-toggle" />
-            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="advanced-button">
+            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="advanced-button" class="icon-button-option">
                 <FlowTween.Editor.MaterialIcon tabindex="-1" icon="settings" name="MaterialIcon" />
             </ui:Button>
         </ui:VisualElement>

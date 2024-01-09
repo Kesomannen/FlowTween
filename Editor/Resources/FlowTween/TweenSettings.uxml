@@ -11,7 +11,13 @@
             <ui:EnumField label="Ease Type" type="FlowTween.EaseType, Kesomannen.FlowTween" binding-path="_presetEase.Type" name="preset-ease-type" class="unity-base-field__aligned" style="flex-grow: 1;" />
             <ui:EnumField type="FlowTween.EaseDirection, Kesomannen.FlowTween" binding-path="_presetEase.Direction" name="preset-ease-direction" value="InOut" class="embedded-field" />
         </ui:VisualElement>
-        <ui:EnumField label="Loop Mode" type="FlowTween.LoopMode, Kesomannen.FlowTween" binding-path="_loopMode" name="loop-mode" class="unity-base-field__aligned" />
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
+            <ui:EnumField label="Loop Mode" type="FlowTween.LoopMode, Kesomannen.FlowTween" binding-path="_loopMode" name="loop-mode" class="unity-base-field__aligned" style="flex-grow: 1;" />
+            <ui:IntegerField value="-1" name="loop-count" binding-path="_loopCount" class="embedded-field" />
+            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="loop-infinite-button" class="icon-button-option" style="margin-left: 3px;">
+                <FlowTween.Editor.MaterialIcon tabindex="-1" icon="all_inclusive" />
+            </ui:Button>
+        </ui:VisualElement>
         <ui:VisualElement style="flex-grow: 1; margin-top: 12px; flex-direction: row; align-items: center;">
             <ui:ProgressBar value="0" title="Preview" name="preview" high-value="1" low-value="0" style="flex-grow: 1; padding-bottom: 0;" />
             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="preview-button" class="icon-button">

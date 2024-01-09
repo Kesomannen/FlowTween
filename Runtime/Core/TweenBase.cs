@@ -15,6 +15,11 @@ public abstract class TweenBase : Runnable {
     /// The loop mode to use. See <see cref="LoopMode"/>.
     /// </summary>
     public LoopMode LoopMode { get; set; }
+
+    /// <summary>
+    /// The number of times to loop. Null means infinite.
+    /// </summary>
+    public int? Loops { get; set; } = null;
     
     Func<float, float> _easeFunction;
     
@@ -31,12 +36,13 @@ public abstract class TweenBase : Runnable {
 
     /// <summary>
     /// Has this tween cancelled or run for the full duration?
-    /// (only applicable when <see cref="LoopMode"/> is <see cref="LoopMode.None"/>).
     /// </summary>
-    public override bool IsComplete => IsCancelled || LoopMode == LoopMode.None && _time >= TotalDuration;
-
-    protected TweenBase() {
-        EaseFunction = x => x;
+    public override bool IsComplete {
+        get {
+            if (IsCancelled) return true;
+            if (LoopMode == LoopMode.None) return _time >= _duration;
+            return Loops.HasValue && _time >= _duration * Loops.Value;
+        }
     }
 
     public abstract void Reverse();

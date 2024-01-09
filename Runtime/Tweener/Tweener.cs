@@ -12,7 +12,7 @@ namespace FlowTween.Components {
 /// </summary>
 [AddComponentMenu("FlowTween/Tweener")]
 public class Tweener : MonoBehaviour, IOnDisableRoutine {
-    [SerializeField] private List<TweenerTargetConfig> _tweens = new();
+    [SerializeField] List<TweenerTargetConfig> _tweens = new();
     [SerializeField] bool _preventOverlapping;
     [SerializeField] bool _sequential;
     

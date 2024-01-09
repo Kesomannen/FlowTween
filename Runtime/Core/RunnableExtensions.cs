@@ -32,6 +32,14 @@ public static class RunnableExtensions {
         runnable.CompleteAction += action;
         return runnable;
     }
+    
+    /// <summary>
+    /// Sets the runnable's <see cref="TweenBase.Delay"/>.
+    /// </summary>
+    public static T SetDelay<T>(this T runnable, float delay) where T : Runnable {
+        runnable.Delay = delay;
+        return runnable;
+    }
 }
 
 }
