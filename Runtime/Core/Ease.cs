@@ -18,6 +18,15 @@ public struct Ease {
     /// </summary>
     public EaseDirection Direction;
 
+    public Ease(EaseType type, EaseDirection direction) {
+        Type = type;
+        Direction = direction;
+    }
+    
+    public static Ease In(EaseType type) => new Ease(type, EaseDirection.In);
+    public static Ease Out(EaseType type) => new Ease(type, EaseDirection.Out);
+    public static Ease InOut(EaseType type) => new Ease(type, EaseDirection.InOut);
+
     /// <summary>
     /// Gets an easing function based on the current <see cref="Type"/> and <see cref="Direction"/>.
     /// You can access them directly in <see cref="Easing"/>.

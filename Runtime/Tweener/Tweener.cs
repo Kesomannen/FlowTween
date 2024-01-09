@@ -10,6 +10,7 @@ namespace FlowTween.Components {
 /// <summary>
 /// Component for creating tweens in the editor.
 /// </summary>
+[AddComponentMenu("FlowTween/Tweener")]
 public class Tweener : MonoBehaviour, IOnDisableRoutine {
     [SerializeField] private List<TweenerTargetConfig> _tweens = new();
     [SerializeField] bool _preventOverlapping;

@@ -26,18 +26,29 @@ public class TweenManager : MonoBehaviour {
     [CanBeNull]
     public static TweenManager Singleton {
         get {
-            if (!Application.isPlaying) {
+            if (!Application.isPlaying) 
                 return null;
+
+            if (_singleton != null) return _singleton._enabled ? _singleton : null;
+            
+            var found = FindObjectsOfType<TweenManager>();
+            switch (found.Length) {
+                case 0:
+                    _singleton = new GameObject("TweenManager").AddComponent<TweenManager>();
+                    DontDestroyOnLoad(_singleton);
+                    break;
+                
+                case 1:
+                    _singleton = found[0];
+                    break;
+                    
+                default:
+                    _singleton = found[0];
+                    Debug.LogWarning("Multiple TweenManagers found in scene! Please ensure there is only one.");
+                    break;
             }
             
-            if (_singleton != null) return _singleton._enabled ? _singleton : null;
-            _singleton = FindObjectOfType<TweenManager>();
-
-            if (_singleton != null) return _singleton._enabled ? _singleton : null;
-            _singleton = new GameObject("TweenManager").AddComponent<TweenManager>();
-            DontDestroyOnLoad(_singleton);
-
-            return _singleton;
+            return _singleton._enabled ? _singleton : null;
         }
     }
 

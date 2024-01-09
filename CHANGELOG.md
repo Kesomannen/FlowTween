@@ -9,7 +9,7 @@
 - `SetTargetId`, `SetTargetUntyped` and `SetTarget` methods to `TweenerTargetConfig`
 - Sequential mode for `Tweener`
 - Added ability to delay tweens
-- Extracted a base class for `Sequence` and `TweenBase` called `Runnable` 
+- Extracted a base class for `Sequence` and `TweenBase` called `Runnable`
 
 ### Changed
 

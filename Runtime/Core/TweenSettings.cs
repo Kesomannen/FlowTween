@@ -82,6 +82,16 @@ public class TweenSettings {
         get => _loopMode;
         set => _loopMode = value;
     }
+
+    public TweenSettings(float duration, Ease ease) {
+        Duration = duration;
+        PresetEase = ease;
+    }
+
+    public TweenSettings(float duration, AnimationCurve curve) {
+        Duration = duration;
+        CustomEase = curve;
+    }
     
     /// <summary>
     /// Applies the settings to the given tween.

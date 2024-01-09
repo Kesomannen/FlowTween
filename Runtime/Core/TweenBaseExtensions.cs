@@ -75,12 +75,7 @@ public static class TweenBaseExtensions {
         settings.Apply(tween);
         return tween;
     }
-    
-    /// <inheritdoc cref="Apply{T}(T, TweenSettings)"/>
-    public static T Apply<T>(this T tween, TweenSettingsProperty settings) where T : TweenBase {
-        return tween.Apply(settings.Value);
-    }
-    
+
     /// <summary>
     /// Sets the tween's <see cref="TweenBase.LoopMode"/>.
     /// </summary>

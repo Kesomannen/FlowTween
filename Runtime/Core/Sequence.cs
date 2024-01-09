@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlowTween.Templates;
 using JetBrains.Annotations;
-using Object = UnityEngine.Object;
 
 namespace FlowTween {
-
 
 public class Sequence : Runnable {
     readonly List<Item> _items = new();
@@ -58,37 +57,17 @@ public class Sequence : Runnable {
         });
     }
 
-    public Sequence Add<T>(Func<Tween<T>> factory, float duration, float delay = 0) {
+    public Sequence Add<T>(Func<Tween<T>> createTween, float duration, float delay = 0) {
         return Add(new Item {
             Duration = duration + delay,
-            Action = () => factory().SetDuration(duration).SetDelay(delay)
+            Action = () => createTween().SetDuration(duration).SetDelay(delay)
         });
     }
     
-    public Sequence Add<T, THolder>(
-        THolder obj, 
-        ITweenFactory<T, THolder> factory, 
-        T to,
-        float duration, 
-        Action<Tween<T>> extraSetup = null
-    ) where THolder : Object {
-        return Add(() => {
-            var tween = obj.Tween(factory, to);
-            extraSetup?.Invoke(tween);
-            return tween;
-        }, duration);
-    }
-    
-    public Sequence Add<T, THolder>(
-        THolder obj,
-        ITweenFactory<T, THolder> factory, 
-        T to, 
-        TweenSettings settings,
-        Action<Tween<T>> extraSetup = null
-    ) where THolder : Object {
-        return Add(obj, factory, to, settings.Duration, tween => {
-            tween.Apply(settings);
-            extraSetup?.Invoke(tween);
+    public Sequence Add<T>(Func<Tween<T>> createTween, TweenSettings settings) {
+        return Add(new Item {
+            Duration = settings.Duration + settings.Delay,
+            Action = () => createTween().Apply(settings)
         });
     }
 
