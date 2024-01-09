@@ -6,6 +6,7 @@ using Object = UnityEngine.Object;
 
 namespace FlowTween {
 
+
 public class Sequence : Runnable {
     readonly List<Item> _items = new();
 
@@ -52,15 +53,15 @@ public class Sequence : Runnable {
     public Sequence AddNow<T>(Tween<T> tween) {
         tween.IsPaused = true;
         return Add(new Item {
-            Duration = tween.Duration, 
+            Duration = tween.TotalDuration, 
             Action = () => tween.IsPaused = false
         });
     }
 
-    public Sequence Add<T>(Func<Tween<T>> factory, float duration) {
+    public Sequence Add<T>(Func<Tween<T>> factory, float duration, float delay = 0) {
         return Add(new Item {
-            Duration = duration,
-            Action = () => factory().SetDuration(duration)
+            Duration = duration + delay,
+            Action = () => factory().SetDuration(duration).SetDelay(delay)
         });
     }
     

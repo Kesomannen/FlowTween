@@ -1,10 +1,16 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Packages/com.kesomannen.flowtween/Editor/Resources/FlowTween/FlowTweenStyle.uss?fileID=7433441132597879392&amp;guid=1652f00bc0ccdfa47868f7330aac3e70&amp;type=3#FlowTweenStyle" />
     <ui:Foldout text="Foldout">
-        <ui:FloatField label="Duration (s)" value="42,2" binding-path="_duration" name="duration" class="unity-base-field__aligned" />
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
+            <ui:FloatField label="Duration (s)" value="42,2" binding-path="_duration" name="duration" class="unity-base-field__aligned" style="flex-grow: 1;" />
+            <ui:FloatField label="Delay (s)" value="42,2" name="delay" binding-path="_delay" class="embedded-field" style="flex-shrink: 1;" />
+        </ui:VisualElement>
         <ui:EnumField label="Type" type="FlowTween.TweenSettings+EasingType, Kesomannen.FlowTween" binding-path="_easeType" name="ease-type" class="unity-base-field__aligned" />
-        <uie:CurveField label="Custom Ease" binding-path="_customEase" name="custom-ease" class="unity-base-field__aligned" />
-        <ui:EnumField label="Preset Ease" type="FlowTween.EaseType, Kesomannen.FlowTween" binding-path="_presetEase" name="preset-ease" class="unity-base-field__aligned" />
+        <uie:CurveField label="Ease Curve" binding-path="_customEase" name="custom-ease" class="unity-base-field__aligned" />
+        <ui:VisualElement name="preset-ease" style="flex-grow: 1; flex-direction: row;">
+            <ui:EnumField label="Ease Type" type="FlowTween.EaseType, Kesomannen.FlowTween" binding-path="_presetEase.Type" name="preset-ease-type" class="unity-base-field__aligned" style="flex-grow: 1;" />
+            <ui:EnumField type="FlowTween.EaseDirection, Kesomannen.FlowTween" binding-path="_presetEase.Direction" name="preset-ease-direction" value="InOut" class="embedded-field" />
+        </ui:VisualElement>
         <ui:EnumField label="Loop Mode" type="FlowTween.LoopMode, Kesomannen.FlowTween" binding-path="_loopMode" name="loop-mode" class="unity-base-field__aligned" />
         <ui:VisualElement style="flex-grow: 1; margin-top: 12px; flex-direction: row; align-items: center;">
             <ui:ProgressBar value="0" title="Preview" name="preview" high-value="1" low-value="0" style="flex-grow: 1; padding-bottom: 0;" />

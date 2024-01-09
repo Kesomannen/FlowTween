@@ -10,6 +10,10 @@ internal static class EditorUtil {
     public static void SetVisible(this VisualElement element, bool visible) {
         element.style.display = visible? DisplayStyle.Flex : DisplayStyle.None;
     }
+    
+    public static bool IsVisible(this VisualElement element) {
+        return element.style.display != DisplayStyle.None;
+    }
 
     public static string ToDisplayString(this object value) {
         return ObjectNames.NicifyVariableName(value.ToString());

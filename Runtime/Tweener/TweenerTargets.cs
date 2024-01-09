@@ -25,7 +25,7 @@ public static class TweenerTargets {
     /// <br/><br/>The naming scheme for ids is <c>&lt;ComponentName&gt;&lt;PropertyName&gt;</c>, e.g. <c>TransformPosition</c>.
     ///
     /// <br/><br/>Domain reloads clear the registry to the default values, so if you want your target
-    /// to be available in the editor, you will need to register them with <see cref="UnityEditor.InitializeOnLoadAttribute"/>;.
+    /// to be available in the editor, you will need to register them with <see cref="UnityEditor.InitializeOnLoadAttribute"/>.
     /// </summary>
     /// <example>
     /// <code>

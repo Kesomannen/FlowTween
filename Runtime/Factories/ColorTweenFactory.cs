@@ -36,7 +36,11 @@ public class ColorTweenFactory<T> :
 {
     public ColorTweenFactory(Func<T, Color> getter, Action<T, Color> setter) 
         : base(getter, setter, Color.LerpUnclamped) { }
-
+    
+    public static ColorTweenFactory<T> Create(string propertyName) {
+        return ReflectionTweenFactory.Create<ColorTweenFactory<T>>(propertyName);
+    }
+    
     public void SetPart(ref Color composite, RGBA part, float value) => composite[(int)part] = value;
     public float GetPart(Color composite, RGBA part) => composite[(int)part];
 

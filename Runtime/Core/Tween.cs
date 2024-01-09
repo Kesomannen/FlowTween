@@ -25,7 +25,7 @@ public class Tween<T> : TweenBase {
     /// Function to linearly interpolate between <see cref="Start"/> and <see cref="End"/>.
     /// Make sure this isn't null when the tween starts (usually the next frame).
     /// </summary>
-    public Func<T, T, float, T> LerpFunction { get; set; }
+    public LerpFunction<T> LerpFunction { get; set; }
     
     /// <summary>
     /// The current value of the tween.
@@ -87,10 +87,15 @@ public class Tween<T> : TweenBase {
     /// <summary>
     /// Sets <see cref="LerpFunction"/>.
     /// </summary>
-    public Tween<T> Lerp(Func<T, T, float, T> lerp) {
+    public Tween<T> Lerp(LerpFunction<T> lerp) {
         LerpFunction = lerp;
         return this;
     }
 }
+
+/// <summary>
+/// A function that linearly interpolates between two values.
+/// </summary>
+public delegate T LerpFunction<T>(T from, T to, float t);
 
 }

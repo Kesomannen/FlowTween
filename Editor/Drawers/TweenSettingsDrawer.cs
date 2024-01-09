@@ -59,7 +59,7 @@ internal class TweenSettingsDrawer : PropertyDrawer {
 
         root.Q<Foldout>().text = property.displayName;
         
-        var presetEase = root.Q<EnumField>("preset-ease");
+        var presetEase = root.Q("preset-ease");
         var customEase = root.Q<CurveField>("custom-ease");
         var progressBar = root.Q<ProgressBar>("preview");
         

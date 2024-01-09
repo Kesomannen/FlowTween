@@ -7,7 +7,7 @@ namespace FlowTween.Editor {
 /// <summary>
 /// A helper class for previewing tweens in the editor.
 /// </summary>
-public class TweenPreview {
+public class TweenPreview : IDisposable {
     TweenBase[] _tweens;
     int _playCount;
     float _lastUpdate;
@@ -134,7 +134,15 @@ public class TweenPreview {
     /// making sure to stop all tweens when the element is detached.
     /// </summary>
     public void Attach(VisualElement element) {
-        element.RegisterCallback<DetachFromPanelEvent>(_ => StopAll());
+        element.RegisterCallback<DetachFromPanelEvent>(_ => Dispose());
+    }
+    
+    public void Dispose() {
+        StopAll();
+        
+        OnTweenStoppedOrRestarted = null;
+        OnStartedPlaying = null;
+        OnStoppedPlaying = null;
     }
 }
 

@@ -17,6 +17,19 @@ public class QuaternionTweenFactory<T> :
     public QuaternionTweenFactory(Func<T, Quaternion> getter, Action<T, Quaternion> setter) 
         : base(getter, setter, Quaternion.LerpUnclamped) { }
 
+    /// <summary>
+    /// Creates a factory that animates a Quaternion property with the given name,
+    /// using <see cref="ReflectionTweenFactory"/>.
+    /// </summary>
+    /// <remarks>
+    /// Since this uses reflection under the hood, the performance is significantly worse
+    /// than defining the getter and setter yourself. If performance is a concern, you should
+    /// use <see cref="QuaternionTweenFactory{T}(System.Func{T,Quaternion},System.Action{T,Quaternion})"/> instead.
+    /// </remarks>
+    public static QuaternionTweenFactory<T> Create(string propertyName) {
+        return ReflectionTweenFactory.Create<QuaternionTweenFactory<T>>(propertyName);
+    }
+    
     public void SetPart(ref Quaternion composite, Axis4 part, float value) => composite[(int)part] = value;
     public float GetPart(Quaternion composite, Axis4 part) => composite[(int)part];
 

@@ -8,7 +8,6 @@ namespace FlowTween.Components {
 /// <summary>
 /// An implementation of <see cref="ITweenerTarget{T,THolder,TData}"/> that
 /// simply tweens a property between two values using a <see cref="ITweenFactory{T,THolder}"/>.
-/// Relies on a data type that implements <see cref="IFromToTweenerTargetData{T}"/>.
 /// </summary>
 /// <seealso cref="FloatFromToTweenerTarget{T}"/>
 /// <seealso cref="Vector3FromToTweenerTarget{T}"/>

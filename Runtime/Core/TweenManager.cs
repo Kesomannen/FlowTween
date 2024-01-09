@@ -20,7 +20,8 @@ public class TweenManager : MonoBehaviour {
 
     /// <summary>
     /// The singleton instance of the <see cref="TweenManager"/>.
-    /// It's not recommended to use this directly, instead use <see cref="TweenManager.TryAccess"/>.
+    /// It's not recommended to use this directly since it might return null,
+    /// instead use <see cref="TweenManager.TryAccess"/>.
     /// </summary>
     [CanBeNull]
     public static TweenManager Singleton {
@@ -103,13 +104,13 @@ public class TweenManager : MonoBehaviour {
         }
     }
 
-    void Return(Runnable tween) {
-        var type = tween.GetType();
+    void Return(Runnable runnable) {
+        var type = runnable.GetType();
         if (!_inactive.TryGetValue(type, out var queue)) {
             _inactive.Add(type, queue = new Queue<Runnable>());
         }
 
-        queue.Enqueue(tween);
+        queue.Enqueue(runnable);
     }
 
     /// <summary>
@@ -143,8 +144,8 @@ public class TweenManager : MonoBehaviour {
 
     /// <summary>
     /// Gets a pooled instance of <typeparamref name="T"/>.
-    /// Only use for advanced cases, otherwise use <see cref="NewTween{T}"/>
-    /// or one of the extension methods.
+    /// Only use for advanced cases, otherwise use <see cref="NewTween{T}"/>,
+    /// <see cref="NewSequence"/> or one of the extension methods.
     /// If there are any inactive instances of type <typeparamref name="T"/>,
     /// an instance is reset and returned.
     /// Otherwise, a new instance is created.
@@ -188,8 +189,7 @@ public class TweenManager : MonoBehaviour {
     /// <summary>
     /// Gets a pooled instance of <see cref="Tween{T}"/>.
     /// If there are any inactive tweens of type <see cref="Tween{T}"/>,
-    /// a tween is reset and returned.
-    /// Otherwise, a new tween is created.
+    /// a tween is reset and returned. Otherwise, a new tween is created.
     /// </summary>
     /// <param name="owner">
     /// The owner of the tween, optional.
@@ -201,6 +201,18 @@ public class TweenManager : MonoBehaviour {
     /// <typeparam name="T">The type of the tween to get.</typeparam>
     public Tween<T> NewTween<T>(Object owner = null) => Get<Tween<T>>(owner);
     
+    /// <summary>
+    /// Gets a pooled instance of <see cref="Sequence"/>.
+    /// If there are any inactive sequences, a sequence is reset and returned.
+    /// Otherwise, a new sequence is created.
+    /// </summary>
+    /// <param name="owner">
+    /// The owner of the tween, optional.
+    /// If it's a <see cref="GameObject"/>, it will be used as the owner.
+    /// If it's a <see cref="Component"/>, its <see cref="Component.gameObject"/>
+    /// will be used as the owner.
+    /// Otherwise, the sequence will have no owner.
+    /// </param>
     public Sequence NewSequence(Object owner = null) => Get<Sequence>(owner);
     
     /// <summary>

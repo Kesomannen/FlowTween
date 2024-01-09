@@ -55,10 +55,10 @@ public interface ITweenFactory<T, in THolder> {
 /// </summary>
 /// <inheritdoc cref="ITweenFactory{T,THolder}"/>
 public class TweenFactory<T, THolder> : ITweenFactory<T, THolder> {
-    readonly Func<THolder, T> _getter;
-    readonly Action<THolder, T> _setter;
-    readonly Func<T, T, float, T> _lerp;
-
+    readonly Func<THolder, T> _getFunction;
+    readonly Action<THolder, T> _setAction;
+    readonly LerpFunction<T> _lerpFunction;
+    
     /// <summary>
     /// Creates a new tween factory.
     /// </summary>
@@ -71,16 +71,16 @@ public class TweenFactory<T, THolder> : ITweenFactory<T, THolder> {
     public TweenFactory(
         Func<THolder, T> getter,
         Action<THolder, T> setter, 
-        Func<T, T, float, T> lerp
+        LerpFunction<T> lerp
     ) {
-        _getter = getter;
-        _setter = setter;
-        _lerp = lerp;
+        _getFunction = getter;
+        _setAction = setter;
+        _lerpFunction = lerp;
     }
 
-    public T Get(THolder holder) => _getter(holder);
-    public void Set(THolder holder, T value) => _setter(holder, value);
-    public T Lerp(T from, T to, float t) => _lerp(from, to, t);
+    public T Get(THolder holder) => _getFunction(holder);
+    public void Set(THolder holder, T value) => _setAction(holder, value);
+    public T Lerp(T from, T to, float t) => _lerpFunction(from, to, t);
 }
 
 /// <summary>

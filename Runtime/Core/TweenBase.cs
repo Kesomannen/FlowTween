@@ -1,29 +1,15 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
 
 namespace FlowTween {
-    
+
 /// <summary>
-/// The base class for all tween-like objects.
-/// 
-/// <br/><br/>Any subclass of this can be ran at runtime and automatically pooled
-/// by the <see cref="TweenManager"/> (see <see cref="TweenManager.Get"/>).
-/// You can also run them manually by not adding them to the manager
-/// and calling <see cref="Update"/> yourself. For example, the editor tween preview
-/// runs tweens using the editor update loop.
-///
-/// <br/><br/>When running manually at runtime, you have to create tweens
-/// with the <c>new</c> keyword, as all of the extension methods for creating
-/// tweens (like <c>transform.TweenPosition(...)</c>) automatically add them
-/// to the <see cref="TweenManager"/>.
-/// 
-/// <br/><br/>You can define your own sub-classes for advanced use cases,
-/// but usually you'll want to use <see cref="Tween{T}"/> and it's
-/// associated methods instead.
+/// Non-generic base class for <see cref="Tween{T}"/>.
 /// </summary>
 public abstract class TweenBase : Runnable {
-    public new float Duration { get; set; }
+    float _duration;
+
+    public override float Duration => _duration;
 
     /// <summary>
     /// The loop mode to use. See <see cref="LoopMode"/>.
@@ -33,7 +19,7 @@ public abstract class TweenBase : Runnable {
     Func<float, float> _easeFunction;
     
     /// <summary>
-    /// The tween's easing function. Input is the <see cref="TweenBase.RawProgress"/>,
+    /// The tween's easing function. Input is the raw progress of the tween,
     /// between 0 and 1. The output can be outside of the 0-1 range, but it's recommended
     /// to keep it close. Should output 0 when the input is 0 and 1 when the input is 1.
     /// <br/><br/>Defaults to a linear function.
@@ -44,10 +30,10 @@ public abstract class TweenBase : Runnable {
     }
 
     /// <summary>
-    /// Has this tween cancelled or run for the full duration
+    /// Has this tween cancelled or run for the full duration?
     /// (only applicable when <see cref="LoopMode"/> is <see cref="LoopMode.None"/>).
     /// </summary>
-    public override bool IsComplete => base.IsComplete || LoopMode == LoopMode.None && _time >= Duration;
+    public override bool IsComplete => IsCancelled || LoopMode == LoopMode.None && _time >= TotalDuration;
 
     protected TweenBase() {
         EaseFunction = x => x;
@@ -62,19 +48,22 @@ public abstract class TweenBase : Runnable {
     /// automatically.
     /// </summary>
     public override void Reset() {
+        base.Reset();
         EaseFunction = null;
-        Duration = 0;
+        _duration = 0;
     }
 
     protected override float GetProgress(float time) {
-        var progress = time / Duration;
+        var rawProgress = base.GetProgress(time);
         return EaseFunction(LoopMode switch {
-            LoopMode.None => progress,
-            LoopMode.Loop => progress % 1,
-            LoopMode.PingPong => Mathf.PingPong(progress, 1),
+            LoopMode.None => rawProgress,
+            LoopMode.Loop => rawProgress % 1,
+            LoopMode.PingPong => Mathf.PingPong(rawProgress, 1),
             _ => throw new ArgumentOutOfRangeException()
         });
     }
+    
+    internal void SetDurationInternal(float duration) => _duration = duration;
 }
 
 }

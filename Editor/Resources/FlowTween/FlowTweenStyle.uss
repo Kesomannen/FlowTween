@@ -12,6 +12,11 @@
     padding: 3px 5px;
     flex-direction: row;
     justify-content: center;
+    padding-right: 3px;
+}
+
+.icon-button__selected {
+    background-color: rgb(70, 96, 124);
 }
 
 .remove-button {
@@ -45,4 +50,31 @@
 
 Foldout > #unity-content {
     margin-bottom: 8px;
+}
+
+#advanced {
+    margin-bottom: 6px;
+}
+
+#advanced-button {
+    margin-left: 8px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-right: 4px;
+    padding-left: 6px;
+    margin-right: 0;
+}
+
+.embedded-field > Label {
+    min-width: 0;
+    padding-right: 5px;
+    padding-left: 10px;
+}
+
+.embedded-field .unity-base-field__input {
+    min-width: 100px;
+}
+
+.mixed-toggle #unity-checkmark {
+    background-image: url('project://database/Assets/UnityDefaultRuntimeTheme.tss?fileID=4456449167576933126&guid=2bedfc9b2f5e6bc4ab960842ed96621d&type=3#check-dash@2x');
 }

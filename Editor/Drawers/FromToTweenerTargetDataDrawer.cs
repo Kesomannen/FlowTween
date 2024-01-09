@@ -38,14 +38,28 @@ internal class FromToTweenerTargetDataDrawer : PropertyDrawer {
             var sourceField = valueElement.Q<ObjectField>("source-field");
             sourceField.objectType = Type.GetType(sourceTypeName.stringValue);
 
-            var foldout = valueElement.Q<Foldout>();
+            var advanced = valueElement.Q("advanced");
+            var advancedButton = valueElement.Q<Button>("advanced-button");
+            advancedButton.clicked += () => SetAdvancedVisible(!advanced.IsVisible());
             
             var relativeToggle = valueElement.Q<Toggle>("relative-toggle");
             relativeToggle.RegisterValueChangedCallback(evt => RelativeChanged(evt.newValue));
             RelativeChanged(relativeToggle.value);
             
             void RelativeChanged(bool value) {
-                foldout.SetVisible(value);
+                advancedButton.SetEnabled(value);
+                if (!value) {
+                    SetAdvancedVisible(false);
+                }
+            }
+
+            void SetAdvancedVisible(bool value) {
+                advanced.SetVisible(value);
+                if (value) {
+                    advancedButton.AddToClassList("icon-button__selected");
+                } else {
+                    advancedButton.RemoveFromClassList("icon-button__selected");
+                }
             }
         }
     }

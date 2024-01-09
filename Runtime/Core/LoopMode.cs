@@ -11,13 +11,12 @@ public enum LoopMode {
     None,
     
     /// <summary>
-    /// Runs from start to end, then repeats until the tween is cancelled.
+    /// Runs from start to end, then back to the start and loops until the tween is cancelled.
     /// </summary>
     Loop,
     
     /// <summary>
-    /// Runs from start to end, then reverses and
-    /// repeats until the tween is cancelled.
+    /// Goes back and forth, repeating until the tween is cancelled.
     /// </summary>
     PingPong
 }

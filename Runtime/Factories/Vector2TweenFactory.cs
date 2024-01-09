@@ -16,6 +16,19 @@ public class Vector2TweenFactory<T> :
     public Vector2TweenFactory(Func<T, Vector2> getter, Action<T, Vector2> setter) 
         : base(getter, setter, Vector2.LerpUnclamped) { }
 
+    /// <summary>
+    /// Creates a factory that animates a Vector2 property with the given name,
+    /// using <see cref="ReflectionTweenFactory"/>.
+    /// </summary>
+    /// <remarks>
+    /// Since this uses reflection under the hood, the performance is significantly worse
+    /// than defining the getter and setter yourself. If performance is a concern, you should
+    /// use <see cref="Vector2TweenFactory{T}(System.Func{T,Vector2},System.Action{T,Vector2})"/> instead.
+    /// </remarks>
+    public static Vector2TweenFactory<T> Create(string propertyName) {
+        return ReflectionTweenFactory.Create<Vector2TweenFactory<T>>(propertyName);
+    }
+    
     public void SetPart(ref Vector2 composite, Axis2 part, float value) => composite[(int)part] = value;
     public float GetPart(Vector2 composite, Axis2 part) => composite[(int)part];
 

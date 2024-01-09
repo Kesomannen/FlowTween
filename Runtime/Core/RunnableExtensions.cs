@@ -1,0 +1,37 @@
+﻿using System;
+
+namespace FlowTween {
+
+/// <summary>
+/// Provides extension methods shared by all <see cref="Runnable"/> subclasses,
+/// mostly for setting properties in a builder-like fashion.
+/// </summary>
+public static class RunnableExtensions {
+    /// <summary>
+    /// Pauses the runnable.
+    /// </summary>
+    /// <seealso cref="Runnable.IsPaused"/>
+    public static T Pause<T>(this T runnable) where T : Runnable {
+        runnable.IsPaused = true;
+        return runnable;
+    }
+    
+    /// <summary>
+    /// Resumes the runnable.
+    /// </summary>
+    /// <seealso cref="Runnable.IsPaused"/>
+    public static T Resume<T>(this T runnable) where T : Runnable {
+        runnable.IsPaused = false;
+        return runnable;
+    }
+    
+    /// <summary>
+    /// Adds an action to the runnable's <see cref="TweenBase.CompleteAction"/>.
+    /// </summary>
+    public static T OnComplete<T>(this T runnable, Action action) where T : Runnable {
+        runnable.CompleteAction += action;
+        return runnable;
+    }
+}
+
+}
