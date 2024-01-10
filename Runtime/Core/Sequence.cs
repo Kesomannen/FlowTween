@@ -21,8 +21,10 @@ public class Sequence : Runnable {
         
         var newItemIndex = GetItemIndex(Progress);
 
-        while (_lastItemIndex < newItemIndex) {
-            _lastItemIndex++;
+        while (_lastItemIndex != newItemIndex) {
+            if (newItemIndex > _lastItemIndex) _lastItemIndex++;
+            else _lastItemIndex--;
+            
             _items[_lastItemIndex].Action?.Invoke();
         }
     }
@@ -37,9 +39,7 @@ public class Sequence : Runnable {
             t += _items[i].Duration / totalTime;
             if (t <= progress) continue;
             
-            while (i < _items.Count - 1 && _items[i + 1].Overlay) {
-                i++;
-            }
+            while (i < _items.Count - 1 && _items[i + 1].Overlay) { i++; }
             return i;
         }
 
@@ -58,7 +58,9 @@ public class Sequence : Runnable {
     /// Adds a delay to the sequence.
     /// </summary>
     public Sequence AddDelay(float duration) {
-        return Add(new Item { Duration = duration });
+        return Add(new Item {
+            Duration = duration
+        });
     }
     
     /// <summary>

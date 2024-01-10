@@ -75,15 +75,6 @@ public static class TweenBaseExtensions {
         settings.Apply(tween);
         return tween;
     }
-
-    /// <summary>
-    /// Sets the tween's <see cref="TweenBase.LoopMode"/> and <see cref="TweenBase.Loops"/>.
-    /// </summary>
-    public static T Loop<T>(this T tween, LoopMode mode = LoopMode.Loop, int? loops = null) where T : TweenBase {
-        tween.LoopMode = mode;
-        tween.Loops = loops;
-        return tween;
-    }
     
     /// <summary>
     /// Sets the tween's <see cref="TweenBase.Duration"/>.

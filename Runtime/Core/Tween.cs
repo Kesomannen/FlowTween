@@ -15,7 +15,7 @@ public class Tween<T> : TweenBase {
     /// End value of this tween.
     /// </summary>
     public T End { get; set; }
-
+    
     /// <summary>
     /// Invoked every update with the current value.
     /// </summary>
@@ -43,13 +43,6 @@ public class Tween<T> : TweenBase {
         if (!safe) {
             UpdateAction?.Invoke(End);
         }
-    }
-
-    /// <summary>
-    /// Reverses the start and end values.
-    /// </summary>
-    public override void Reverse() {
-        (Start, End) = (End, Start);
     }
 
     public override void Reset() {

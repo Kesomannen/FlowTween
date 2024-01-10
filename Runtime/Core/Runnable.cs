@@ -41,6 +41,17 @@ public abstract class Runnable : IEnumerator {
     public Action CompleteAction { get; set; }
     
     /// <summary>
+    /// The <see cref="LoopMode"/> of this runnable.
+    /// </summary>
+    public LoopMode LoopMode { get; set; }
+    
+    /// <summary>
+    /// The number of times this runnable should loop. Set to null to loop infinitely.
+    /// Not applicable if <see cref="LoopMode"/> is <see cref="LoopMode.None"/>.
+    /// </summary>
+    public int? Loops { get; set; }
+    
+    /// <summary>
     /// The duration of this runnable, in seconds.
     /// Note that this does not include any <see cref="Delay"/> before the runnable starts.
     /// </summary>
@@ -80,8 +91,14 @@ public abstract class Runnable : IEnumerator {
     /// <summary>
     /// Has this runnable been cancelled or run for the full duration?
     /// </summary>
-    public virtual bool IsComplete => IsCancelled || _time >= TotalDuration;
-    
+    public virtual bool IsComplete {
+        get {
+            if (IsCancelled) return true;
+            if (LoopMode == LoopMode.None) return _time >= TotalDuration;
+            return Loops.HasValue && _time >= Duration * Loops.Value + Delay;
+        }
+    }
+
     /// <summary>
     /// Updates the runnnable.
     /// Only use this if you're running this manually, otherwise it's
@@ -132,7 +149,13 @@ public abstract class Runnable : IEnumerator {
             return 0;
         }
         
-        return Mathf.Max(time - Delay, 0) / Duration;
+        var rawProgress = Mathf.Max(time - Delay, 0) / Duration;
+        return LoopMode switch {
+            LoopMode.None => rawProgress,
+            LoopMode.Loop => rawProgress % 1,
+            LoopMode.PingPong => Mathf.PingPong(rawProgress, 1),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
     
     object IEnumerator.Current => null;

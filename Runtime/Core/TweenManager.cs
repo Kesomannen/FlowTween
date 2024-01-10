@@ -10,6 +10,8 @@ namespace FlowTween {
 /// <summary>
 /// Singleton for running and pooling <see cref="Runnable"/> objects at runtime.
 /// </summary>
+[DisallowMultipleComponent]
+[AddComponentMenu("FlowTween/Tween Manager")]
 public class TweenManager : MonoBehaviour {
     [SerializeField] bool _enabled = true;
     [SerializeField] bool _doNullChecks = true;

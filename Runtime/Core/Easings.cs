@@ -7,7 +7,7 @@ namespace FlowTween {
 /// Standard easing functions.
 /// Visit https://easings.net/ for a visual representation of each of the functions.
 /// </summary>
-public static class Easing {
+public static class Easings {
     const float HalfPI = Mathf.PI / 2;
     
     public static float Linear(float t) => t;

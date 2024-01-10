@@ -10,42 +10,19 @@ public abstract class TweenBase : Runnable {
     float _duration;
 
     public override float Duration => _duration;
-
-    /// <summary>
-    /// The loop mode to use. See <see cref="LoopMode"/>.
-    /// </summary>
-    public LoopMode LoopMode { get; set; }
-
-    /// <summary>
-    /// The number of times to loop. Null means infinite.
-    /// </summary>
-    public int? Loops { get; set; } = null;
     
     Func<float, float> _easeFunction;
     
     /// <summary>
-    /// The tween's easing function. Input is the raw progress of the tween,
+    /// The tween's easing function. Input is the raw progress of the tween as it plays,
     /// between 0 and 1. The output can be outside of the 0-1 range, but it's recommended
     /// to keep it close. Should output 0 when the input is 0 and 1 when the input is 1.
     /// <br/><br/>Defaults to a linear function.
     /// </summary>
     public Func<float, float> EaseFunction {
-        get => _easeFunction ?? Easing.Linear;
+        get => _easeFunction ?? Easings.Linear;
         set => _easeFunction = value;
     }
-
-    /// <summary>
-    /// Has this tween cancelled or run for the full duration?
-    /// </summary>
-    public override bool IsComplete {
-        get {
-            if (IsCancelled) return true;
-            if (LoopMode == LoopMode.None) return _time >= _duration;
-            return Loops.HasValue && _time >= _duration * Loops.Value;
-        }
-    }
-
-    public abstract void Reverse();
 
     /// <summary>
     /// Resets the tween to be recycled.
@@ -60,13 +37,7 @@ public abstract class TweenBase : Runnable {
     }
 
     protected override float GetProgress(float time) {
-        var rawProgress = base.GetProgress(time);
-        return EaseFunction(LoopMode switch {
-            LoopMode.None => rawProgress,
-            LoopMode.Loop => rawProgress % 1,
-            LoopMode.PingPong => Mathf.PingPong(rawProgress, 1),
-            _ => throw new ArgumentOutOfRangeException()
-        });
+        return EaseFunction(base.GetProgress(time));
     }
     
     internal void SetDurationInternal(float duration) => _duration = duration;

@@ -40,6 +40,15 @@ public static class RunnableExtensions {
         runnable.Delay = delay;
         return runnable;
     }
+    
+    /// <summary>
+    /// Sets the runnable's <see cref="TweenBase.LoopMode"/> and <see cref="TweenBase.Loops"/>.
+    /// </summary>
+    public static T Loop<T>(this T runnable, LoopMode mode = LoopMode.Loop, int? loops = null) where T : Runnable {
+        runnable.LoopMode = mode;
+        runnable.Loops = loops;
+        return runnable;
+    }
 }
 
 }

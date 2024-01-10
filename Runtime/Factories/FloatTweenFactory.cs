@@ -19,7 +19,7 @@ public class FloatTweenFactory<T> : TweenFactory<float, T> {
     /// than defining the getter and setter yourself. If performance is a concern, you should
     /// use <see cref="FloatTweenFactory{T}(System.Func{T,float},System.Action{T,float})"/> instead.
     /// </remarks>
-    public static FloatTweenFactory<T> Create(string propertyName) {
+    public static FloatTweenFactory<T> From(string propertyName) {
         return ReflectionTweenFactory.Create<FloatTweenFactory<T>>(propertyName);
     }
 }

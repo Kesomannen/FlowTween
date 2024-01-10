@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using FlowTween.Components;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -40,6 +41,10 @@ public static class ReflectionTweenFactory {
     /// compile-time safety as using a factory.
     /// </remarks>
     public static Tween<T> CreateTween<T, THolder>(THolder holder, string propertyName, T to) where THolder : Object { 
+        return holder.Tween(Create<T, THolder>(propertyName), to);
+    }
+    
+    static ITweenFactory<T, THolder> Create<T, THolder>(string propertyName) where THolder : Object {
         object factory;
         var propertyType = typeof(T);
 
@@ -56,8 +61,8 @@ public static class ReflectionTweenFactory {
         } else {
             throw new ArgumentException($"Type {propertyType} is not supported");
         }
-        
-        return holder.Tween((ITweenFactory<T, THolder>)factory, to);
+
+        return (ITweenFactory<T, THolder>)factory;
     }
 
     /// <summary>

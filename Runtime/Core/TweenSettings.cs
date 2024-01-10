@@ -1,4 +1,5 @@
 ﻿using System;
+using Codice.Client.BaseCommands;
 using UnityEngine;
 
 namespace FlowTween {
@@ -90,7 +91,7 @@ public class TweenSettings {
     }
 
     public TweenSettings() { }
-
+    
     public TweenSettings(float duration, Ease ease) {
         Duration = duration;
         PresetEase = ease;
@@ -99,6 +100,16 @@ public class TweenSettings {
     public TweenSettings(float duration, AnimationCurve curve) {
         Duration = duration;
         CustomEase = curve;
+    }
+
+    public TweenSettings(TweenSettings settings) {
+        _duration = settings._duration;
+        _delay = settings._delay;
+        _easeType = settings._easeType;
+        _presetEase = settings._presetEase;
+        _customEase = settings._customEase;
+        _loopMode = settings._loopMode;
+        _loopCount = settings._loopCount;
     }
     
     /// <summary>

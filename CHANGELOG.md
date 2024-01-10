@@ -19,6 +19,7 @@
     - "GraphicGradient" is now "GraphicColor (Gradient)"
     - "RectTransformPosition" is now "RectTransformAnchoredPosition"
     - "RectTransformSize" is now "RectTransformSizeDelta"
+- `Easing` is now `Easings`
 
 ### Fixed
 
