@@ -4,9 +4,8 @@ A modern and easy-to-use tweening library for Unity 2022.3+.
 You can use FlowTween fluently like any other tweening library:
 
 ```csharp
-transform
-    .TweenX(10)
-    .SetEase(Ease.OutCubic)
+transform.TweenX(10)
+    .SetEaseOut(EaseType.Cubic)
     .SetDuration(1);
 ```
 
