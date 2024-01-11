@@ -65,14 +65,15 @@ Foldout > #unity-content {
     margin-right: -2px;
 }
 
-.embedded-field > Label {
-    min-width: 0;
-    padding-right: 5px;
-    padding-left: 10px;
+.embedded-field {
+    min-width: 150px;
+    flex-direction: row;
 }
 
-.embedded-field .unity-base-field__input {
-    min-width: 100px;
+.embedded-field > Label {
+    min-width: 0;
+    flex-shrink: 1;
+    margin-left: 2px;
 }
 
 .mixed-toggle #unity-checkmark {

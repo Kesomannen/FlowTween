@@ -30,7 +30,7 @@ public interface ITweenerTarget {
     object GetData();
     
     /// <summary>
-    /// Gets a tween for this target, using the given data and holder component.
+    /// Creates a tween for this target, using the given data and holder component.
     /// </summary>
     TweenBase GetTween(Component component, object data);
     
@@ -61,7 +61,7 @@ public interface ITweenerTarget<T, in THolder, in TData> : ITweenerTarget
     /// <inheritdoc cref="ITweenerTarget.ApplySnapshot"/>
     void ApplySnapshot(THolder holder, T snapshot);
     
-    /// <inheritdoc cref="ITweenerTarget.GetData"/>
+    /// <inheritdoc cref="ITweenerTarget.GetTween"/>
     TweenBase GetTween(THolder holder, TData data);
     /// <inheritdoc cref="ITweenerTarget.OnDrawGizmos"/>
     virtual void OnDrawGizmos(THolder holder, TData data) { }

@@ -23,11 +23,9 @@ public static class ReflectionTweenFactory {
     /// <summary>
     /// Creates a tween that animates a property on an object, using reflection.
     /// </summary>
-    /// <param name="propertyName">
-    /// The name of the property. The type must be float, <see cref="Vector2"/>, <see cref="Vector3"/>, <see cref="Quaternion"/> or <see cref="Color"/>.
-    /// </param>
+    /// <param name="propertyName">The name of the property.</param>
     /// <param name="to">The tween's <see cref="Tween{T}.End"/> value.</param>
-    /// <typeparam name="T">The type of the resulting tween. Must be the same as the property and one of the supported types.</typeparam>
+    /// <typeparam name="T">The type of the property. Must be float, <see cref="Vector2"/>, <see cref="Vector3"/>, <see cref="Quaternion"/> or <see cref="Color"/>.</typeparam>
     /// <typeparam name="THolder">The target object's type.</typeparam>
     /// <returns>
     /// A newly created tween. If we are at runtime and the <see cref="TweenManager"/> is
@@ -44,7 +42,7 @@ public static class ReflectionTweenFactory {
         return holder.Tween(Create<T, THolder>(propertyName), to);
     }
     
-    static ITweenFactory<T, THolder> Create<T, THolder>(string propertyName) where THolder : Object {
+    public static ITweenFactory<T, THolder> Create<T, THolder>(string propertyName) where THolder : Object {
         object factory;
         var propertyType = typeof(T);
 
