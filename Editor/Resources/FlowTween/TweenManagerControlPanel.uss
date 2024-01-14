@@ -28,8 +28,8 @@
 }
 
 .table-layout .table-progress {
-    min-width: 200px;
     flex-grow: 1;
+    width: 80px;
 }
 
 .table-layout .table-controls {
@@ -43,4 +43,15 @@
     flex-grow: 1;
     margin-right: 1px;
     margin-left: 1px;
+}
+
+.panel {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-right: 4px;
+    margin-left: 4px;
+}
+
+.unity-collection-view__item {
+    padding-left: 4px;
 }

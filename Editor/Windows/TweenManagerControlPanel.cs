@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using FlowTween;
 using FlowTween.Editor;
 using UnityEditor;
@@ -12,10 +13,16 @@ public class TweenManagerControlPanel : EditorWindow {
 
     TweenManager _manager;
     VisualElement _root;
+    
+    VisualElement _tweenProperties;
+    TweenListItemData? _selectedData;
 
     readonly List<TweenListItemData> _data = new();
     ListView _tweenListView;
-
+    int _tick;
+    
+    const int RefreshRate = 20;
+    
     [MenuItem("Window/FlowTween/Control Panel")]
     public static void ShowPanel() {
         var window = GetWindow<TweenManagerControlPanel>();
@@ -28,7 +35,15 @@ public class TweenManagerControlPanel : EditorWindow {
         rootVisualElement.Add(_root);
         
         UpdateManager();
+        SetupProperties();
         SetupTweenList();
+
+        EditorApplication.update += () => {
+            _tick++;
+            if (_tick % RefreshRate == 0) {
+                Refresh();
+            }
+        };
     }
 
     void UpdateManager() {
@@ -69,12 +84,20 @@ public class TweenManagerControlPanel : EditorWindow {
         
         _tweenListView.makeItem = MakeItem;
         _tweenListView.bindItem = BindItem;
-        _tweenListView.unbindItem = UnbindItem;
+
+        _tweenListView.selectionType = SelectionType.Single;
+        _tweenListView.selectionChanged += selected => {
+            var data = selected.FirstOrDefault();
+            if (data == null) ShowProperties(null);
+            else ShowProperties(data as TweenListItemData?);
+        };
         
         _tweenListView.itemsSource = _data;
         
-        VisualElement MakeItem() {
-            return _tweenUxml.CloneTree();
+        VisualElement MakeItem() { 
+            var item = _tweenUxml.CloneTree();
+            item.Q("tween-owner").Q<ObjectField>().SetEnabled(false);
+            return item;
         }
 
         void BindItem(VisualElement element, int index) {
@@ -84,47 +107,14 @@ public class TweenManagerControlPanel : EditorWindow {
             element.SetEnabled(data.Active);
             element.Q<Label>("tween-name").text = data.Name;
             
-            
-            var ownerField = element.Q("tween-owner").Q<ObjectField>();
-            if (data.Owner == null) {
-                ownerField.SetEnabled(false);
-                ownerField.objectType = typeof(Object);
-            } else {
-                ownerField.SetEnabled(true);
-                ownerField.objectType = data.Owner.GetType();
-                ownerField.value = data.Owner;
-            }
-            
+            SetOwnerField(element.Q("tween-owner").Q<ObjectField>(), data.Owner);
             
             var progressBar = element.Q("tween-progress").Q<ProgressBar>();
             var progress = runnable.Progress;
             var duration = runnable.TotalDuration;
             progressBar.value = progress;
-            progressBar.title = $"{progress * duration:0} / {duration:0}s ({progress:P0}%)";
-            
-            
-            var controls = element.Q("tween-controls");
-            var pauseButton = controls.Q<Button>("pause");
-            pauseButton.Q<MaterialIcon>().IconName = runnable.IsPaused ? "play_arrow" : "pause";
-            pauseButton.RegisterCallback<ClickEvent, int>(OnPauseButtonClicked, index);
-            
-            controls.Q<Button>("cancel").RegisterCallback<ClickEvent, int>(OnCancelButtonClicked, index);
+            progressBar.title = $"{progress * duration:0.#} / {duration:0.#}s ({progress:P0})";
         }
-        
-        void UnbindItem(VisualElement element, int index) {
-            var controls = element.Q("tween-controls");
-            controls.Q<Button>("pause").UnregisterCallback<ClickEvent, int>(OnPauseButtonClicked);
-            controls.Q<Button>("cancel").UnregisterCallback<ClickEvent, int>(OnCancelButtonClicked);
-        }
-    }
-    
-    void OnPauseButtonClicked(ClickEvent evt, int index) {
-        var runnable = _data[index].Runnable;
-        runnable.IsPaused = !runnable.IsPaused;
-    }
-    
-    void OnCancelButtonClicked(ClickEvent evt, int index) {
-        _manager.Cancel(_data[index].Runnable, true);
     }
 
     void UpdateData() {
@@ -151,10 +141,74 @@ public class TweenManagerControlPanel : EditorWindow {
     }
 
     void Refresh() {
+        UpdateManager();
         UpdateData();
         _tweenListView.Rebuild();
     }
 
+    void SetupProperties() {
+        _tweenProperties = _root.Q("tween-properties");
+        _tweenProperties.Q("readonly").SetEnabled(false);
+
+        _tweenProperties.Q<Button>("pause").clicked += () => {
+            if (!IsSelectedDataActive(out var data)) return;
+            data.Runnable.IsPaused = !data.Runnable.IsPaused;
+            RefreshProperties();
+        };
+        
+        _tweenProperties.Q<Button>("cancel").clicked += () => {
+            if (!IsSelectedDataActive(out var data)) return;
+            _manager.Cancel(data.Runnable, true);
+            RefreshProperties();
+        };
+        
+        ShowProperties(null);
+    }
+
+    void ShowProperties(TweenListItemData? data) {
+        _selectedData = data;
+        
+        if (!data.HasValue || _data.All(d => d.Runnable != data.Value.Runnable)) {
+            _tweenProperties.SetVisible(false);
+            return;
+        }
+        
+        var runnable = data.Value.Runnable;
+        
+        _tweenProperties.SetVisible(true);
+        SetOwnerField(_tweenProperties.Q<ObjectField>("owner"), data.Value.Owner);
+        
+        _tweenProperties.Q<Label>().text = data.Value.Name;
+        
+        var pauseButton = _tweenProperties.Q<Button>("pause");
+        pauseButton.SetEnabled(data.Value.Active);
+        pauseButton.Q<MaterialIcon>().IconName = runnable.IsPaused ? "play_arrow" : "pause";
+        
+        _tweenProperties.Q<Button>("cancel").SetEnabled(data.Value.Active);
+        
+        _tweenProperties.Q<IntegerField>("loops").value = runnable.Loops ?? -1;
+        _tweenProperties.Q<EnumField>("loop-mode").value = runnable.LoopMode;
+        _tweenProperties.Q<FloatField>("duration").value = runnable.Duration;
+        _tweenProperties.Q<FloatField>("delay").value = runnable.Delay;
+        _tweenProperties.Q<Toggle>("ignore-timescale").value = runnable.IgnoreTimescale;
+    }
+    
+    void RefreshProperties() => ShowProperties(_selectedData);
+    
+    bool IsSelectedDataActive(out TweenListItemData data) {
+        data = _selectedData ?? default;
+        return data.Active;
+    }
+
+    void SetOwnerField(ObjectField field, Object owner) {
+        if (owner == null) {
+            field.objectType = typeof(Object);
+        } else {
+            field.objectType = owner.GetType();
+            field.value = owner;
+        }
+    }
+    
     struct TweenListItemData {
         public bool Active;
         public Object Owner;
@@ -162,8 +216,18 @@ public class TweenManagerControlPanel : EditorWindow {
 
         public string Name {
             get {
-                var name = Runnable.GetType().Name;
+                string name;
+                
+                var type = Runnable.GetType();
+                if (type.IsGenericType) {
+                    var arguments = type.GetGenericArguments().Select(t => t.Name).ToArray();
+                    name = $"{type.Name.Split('`')[0]}<{string.Join(',', arguments)}>";
+                } else {
+                    name = type.Name;
+                }
+                
                 if (!Active) name += " (inactive)";
+                else if (Runnable.IsPaused) name += " (paused)";
                 return name;
             }
         }

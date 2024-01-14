@@ -70,7 +70,7 @@ public static class TweenerTargets {
         { "TransformRotation", new Vector3FromToTweenerTarget<Transform>(TransformTweens.EulerAngles) },
         { "TransformLocalRotation", new Vector3FromToTweenerTarget<Transform>(TransformTweens.LocalEulerAngles) },
         { "TransformScale", new Vector3FromToTweenerTarget<Transform>(TransformTweens.Scale) },
-        { "TransformUniformScale", new FloatFromToTweenerTarget<Transform>(TransformTweens.UniformScale) },
+        { "TransformScale (Uniform)", new FloatFromToTweenerTarget<Transform>(TransformTweens.UniformScale) },
         { "RectTransformAnchoredPosition", new Vector2FromToTweenerTarget<RectTransform>(RectTransformTweens.AnchoredPosition) },
         { "RectTransformSizeDelta", new Vector2FromToTweenerTarget<RectTransform>(RectTransformTweens.SizeDelta) },
         { "GraphicColor", new ColorFromToTweenerTarget<Graphic>(GraphicTweens.Color) },

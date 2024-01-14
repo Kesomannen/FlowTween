@@ -2,6 +2,7 @@
 using System.Linq;
 using FlowTween.Templates;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace FlowTween.Components {
     
@@ -22,6 +23,9 @@ public class TweenerTargetConfig {
     [SerializeField] bool _playOnEnable;
     [SerializeField] bool _playOnDisable;
     [SerializeField] bool _resetOnDisable = true;
+    [SerializeField] bool _ignoreTimescale;
+    [SerializeField] UnityEvent _onStart;
+    [SerializeField] UnityEvent _onComplete;
     [SerializeField] bool _selected;
 
     /// <summary>
@@ -108,7 +112,12 @@ public class TweenerTargetConfig {
         var target = GetTarget();
         var component = GetComponent(gameObject);
         if (component != null) {
-            return target.GetTween(component, _data).Apply(Settings.Value);
+            _onStart.Invoke();
+            
+            return target.GetTween(component, _data)
+                .SetIgnoreTimescale(_ignoreTimescale)
+                .OnComplete(_onComplete.Invoke)
+                .Apply(Settings.Value);
         }
         
         Debug.LogError($"Target component of type {target.ComponentType} is missing", component);

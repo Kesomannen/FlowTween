@@ -43,9 +43,9 @@ internal class TweenerTargetConfigDrawer : PropertyDrawer {
             RebindData();
         });
 
-        resetOnDisable.SetVisible(playOnDisable.value);
+        resetOnDisable.SetEnabled(playOnDisable.value);
         playOnDisable.RegisterValueChangedCallback(evt => {
-            resetOnDisable.SetVisible(evt.newValue);
+            resetOnDisable.SetEnabled(evt.newValue);
         });
 
         var previewButton = root.Q<Button>("preview-button");

@@ -5,8 +5,8 @@ using UnityEngine;
 namespace FlowTween {
 
 /// <summary>
-/// The base class for all tween-like objects.
-/// 
+/// Base class for tweens and sequences. Can be awaited in coroutines with <c>yield</c>.
+///
 /// <br/><br/>Any subclass of this can be ran at runtime and automatically pooled
 /// by the <see cref="TweenManager"/> (see <see cref="TweenManager.Get{T}"/>).
 /// You can also run them manually by calling <see cref="Update"/> yourself.
@@ -18,9 +18,7 @@ namespace FlowTween {
 /// extension methods for creating tweens and sequences (like <c>transform.TweenPosition(...)</c>)
 /// automatically add them to the <see cref="TweenManager"/> (if it's enabled).
 /// 
-/// <br/><br/>You can define your own sub-classes for advanced use cases,
-/// but usually you'll want to use <see cref="Tween{T}"/> or <see cref="Sequence"/> and their
-/// associated methods instead.
+/// <br/><br/>You can also define your own sub-classes for advanced use cases.
 /// </summary>
 public abstract class Runnable : IEnumerator {
     /// <summary>
@@ -53,22 +51,23 @@ public abstract class Runnable : IEnumerator {
     
     /// <summary>
     /// The duration of this runnable, in seconds.
-    /// Note that this does not include any <see cref="Delay"/> before the runnable starts.
+    /// Note that this does not include any <see cref="Delay"/> before the runnable starts
+    /// or the <see cref="LoopMode"/> the runnable might use.
     /// </summary>
     /// <seealso cref="TotalDuration"/>
     public virtual float Duration { get; }
-    
+
     /// <summary>
-    /// The total duration of this runnable (including <see cref="Delay"/>), in seconds.
+    /// The total duration of this runnable (including <see cref="Delay"/> and <see cref="Loops"/>), in seconds.
     /// </summary>
-    public float TotalDuration => Duration + Delay;
+    public float TotalDuration => Duration * (LoopMode == LoopMode.None || !Loops.HasValue ? 1 : Loops.Value) + Delay;
     
     /// <summary>
     /// The delay before this runnable starts, in seconds.
     /// </summary>
     public float Delay { get; set; }
 
-    protected float _time;
+    float _time;
 
     /// <summary>
     /// The progress of this runnable, usually between 0 and 1
@@ -94,7 +93,7 @@ public abstract class Runnable : IEnumerator {
     public virtual bool IsComplete {
         get {
             if (IsCancelled) return true;
-            if (LoopMode == LoopMode.None) return _time >= TotalDuration;
+            if (LoopMode == LoopMode.None) return _time >= Duration + Delay;
             return Loops.HasValue && _time >= Duration * Loops.Value + Delay;
         }
     }

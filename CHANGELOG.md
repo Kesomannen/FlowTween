@@ -10,6 +10,9 @@
 - Sequential mode for `Tweener`
 - Added ability to delay tweens
 - Extracted a base class for `Sequence` and `TweenBase` called `Runnable`
+- OnComplete and OnStart UnityEvents in `TweenerTargetConfig`
+- Ignore Timescale option for `TweenerTargetConfig`
+- Control panel to monitor tweens in the `TweenManager`
 
 ### Changed
 
@@ -19,6 +22,7 @@
     - "GraphicGradient" is now "GraphicColor (Gradient)"
     - "RectTransformPosition" is now "RectTransformAnchoredPosition"
     - "RectTransformSize" is now "RectTransformSizeDelta"
+    - "TransformUniformScale" is now "TransformScale (Uniform)"
 - `Easing` is now `Easings`
 
 ### Fixed

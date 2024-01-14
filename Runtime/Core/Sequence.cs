@@ -57,9 +57,9 @@ public class Sequence : Runnable {
     /// <summary>
     /// Adds a delay to the sequence.
     /// </summary>
-    public Sequence AddDelay(float duration) {
+    public Sequence AddDelay(float seconds) {
         return Add(new Item {
-            Duration = duration
+            Duration = seconds
         });
     }
     
@@ -97,6 +97,7 @@ public class Sequence : Runnable {
     /// when it's time to play. The duration and delay of the tween
     /// are set automatically from the parameters.
     /// </summary>
+    /// <param name="overlay">See <see cref="Item.Overlay"/>.</param>
     public Sequence Add<T>(Func<Tween<T>> createTween, float duration, float delay = 0, bool overlay = false) {
         return Add(new Item {
             Duration = duration + delay,
@@ -110,6 +111,7 @@ public class Sequence : Runnable {
     /// when it's time to play. The <paramref name="settings"/> are automatically applied
     /// to the tween.
     /// </summary>
+    /// <param name="overlay">See <see cref="Item.Overlay"/>.</param>
     public Sequence Add<T>(Func<Tween<T>> createTween, TweenSettings settings, bool overlay = false) {
         return Add(new Item {
             Duration = settings.Duration + settings.Delay,
