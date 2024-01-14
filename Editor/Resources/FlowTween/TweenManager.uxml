@@ -1,11 +1,15 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Packages/com.kesomannen.flowtween/Editor/Resources/FlowTween/FlowTweenStyle.uss?fileID=7433441132597879392&amp;guid=1652f00bc0ccdfa47868f7330aac3e70&amp;type=3#FlowTweenStyle" />
+    <Style src="project://database/Packages/com.kesomannen.flowtween/Editor/Resources/FlowTween/FlowTween.uss?fileID=7433441132597879392&amp;guid=1652f00bc0ccdfa47868f7330aac3e70&amp;type=3#FlowTweenStyle" />
     <ui:Toggle label="Enabled" binding-path="_enabled" name="enabled-toggle" class="unity-base-field__aligned" />
     <ui:VisualElement name="options">
         <ui:Toggle label="Do Null Checks" binding-path="_doNullChecks" name="null-checks-toggle" tooltip="Whether or not to do null checks on the owner of tweens every update. If a null owner is detected, the tween is cancelled automatically." class="unity-base-field__aligned" />
         <ui:VisualElement style="flex-direction: row;">
-            <ui:IntegerField label="Max Tweens" value="42" binding-path="_maxTweens" name="max-tweens-field" class="unity-base-field__aligned" style="flex-grow: 1;" tooltip="The maximum number of tweens that can be created. Both inactive and active tweens count towards this number." />
-            <ui:Toggle binding-path="_hasMaxTweens" style="margin-left: 8px; margin-right: 2px ;" name="has-max-tweens-toggle" class="unity-base-field__aligned" />
+            <ui:IntegerField label="Max Tweens" value="42" binding-path="_maxTweens" name="max-tweens-field" tooltip="The maximum number of tweens that can be created. Both inactive and active tweens count towards this number." class="unity-base-field__aligned" style="flex-grow: 1;" />
+            <ui:Toggle binding-path="_hasMaxTweens" name="has-max-tweens-toggle" class="unity-base-field__aligned" style="margin-left: 8px; margin-right: 2px;" />
         </ui:VisualElement>
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="control-panel-button" class="icon-button">
+            <FlowTween.Editor.MaterialIcon tabindex="-1" icon="dvr" />
+            <ui:Label tabindex="-1" text="Open Control Panel" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+        </ui:Button>
     </ui:VisualElement>
 </ui:UXML>

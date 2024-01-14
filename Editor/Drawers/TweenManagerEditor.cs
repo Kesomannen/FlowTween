@@ -18,6 +18,8 @@ public class TweenManagerEditor : UnityEditor.Editor {
         var hasMaxTweensToggle = root.Q<Toggle>("has-max-tweens-toggle");
         hasMaxTweensToggle.RegisterValueChangedCallback(evt => maxTweensField.SetEnabled(evt.newValue));
         maxTweensField.SetEnabled(serializedObject.FindProperty("_hasMaxTweens").boolValue);
+
+        root.Q<Button>("control-panel-button").clicked += TweenManagerControlPanel.ShowPanel;
         
         return root;
     }

@@ -1,0 +1,20 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.kesomannen.flowtween/Editor/Resources/FlowTween/TweenManagerControlPanel.uss?fileID=7433441132597879392&amp;guid=2ee9065be3b71d04495001d3fff4a809&amp;type=3#TweenManagerControlPanel" />
+    <Style src="project://database/Packages/com.kesomannen.flowtween/Editor/Resources/FlowTween/FlowTween.uss?fileID=7433441132597879392&amp;guid=1652f00bc0ccdfa47868f7330aac3e70&amp;type=3#FlowTween" />
+    <ui:VisualElement name="help-message" style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.1); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; flex-direction: row; margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;">
+        <FlowTween.Editor.MaterialIcon tabindex="-1" icon="info" />
+        <ui:Label tabindex="-1" text="Enter play mode to enable control panel" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: middle-left;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="tweens" style="flex-grow: 1; margin-top: 4px; margin-right: 12px; margin-bottom: 12px; margin-left: 12px;">
+        <ui:VisualElement class="table-legend table-layout" style="flex-direction: row;">
+            <ui:Label tabindex="-1" text="Name" parse-escape-sequences="true" display-tooltip-when-elided="true" class="table-name" />
+            <ui:VisualElement class="divider" />
+            <ui:Label tabindex="-1" text="Owner" parse-escape-sequences="true" display-tooltip-when-elided="true" class="table-owner" />
+            <ui:VisualElement class="divider" />
+            <ui:Label tabindex="-1" text="Progress" parse-escape-sequences="true" display-tooltip-when-elided="true" class="table-progress" />
+            <ui:VisualElement class="divider" />
+            <ui:Label tabindex="-1" text="Controls" parse-escape-sequences="true" display-tooltip-when-elided="true" class="table-controls" />
+        </ui:VisualElement>
+        <ui:ListView focusable="true" />
+    </ui:VisualElement>
+</ui:UXML>

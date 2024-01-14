@@ -98,6 +98,9 @@ public class TweenManager : MonoBehaviour {
     /// The total number of created tweens, both active and inactive.
     /// </summary>
     public int TotalTweenCount => ActiveTweenCount + InactiveTweenCount;
+    
+    public IReadOnlyDictionary<Type, Queue<Runnable>> InactiveTweens => _inactive;
+    public IReadOnlyList<RunnableInstance> ActiveTweens => _active;
 
     void Update() {
         for (var i = 0; i < _active.Count; i++) {
@@ -254,7 +257,7 @@ public class TweenManager : MonoBehaviour {
         return true;
     }
 
-    readonly struct RunnableInstance {
+    public readonly struct RunnableInstance {
         public readonly Runnable Runnable;
         public readonly GameObject Owner;
         public readonly bool HasOwner;

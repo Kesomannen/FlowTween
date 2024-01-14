@@ -1,0 +1,24 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <Style src="FlowTween.uss" />
+    <Style src="TweenManagerControlPanel.uss" />
+    <ui:VisualElement class="table-layout tween">
+        <ui:Label tabindex="-1" text="Name" parse-escape-sequences="true" display-tooltip-when-elided="true" name="tween-name" class="table-name" />
+        <ui:VisualElement class="divider" />
+        <ui:VisualElement name="tween-owner" class="table-owner" style="flex-grow: 1;">
+            <uie:ObjectField />
+        </ui:VisualElement>
+        <ui:VisualElement class="divider" />
+        <ui:VisualElement name="tween-progress" class="table-progress" style="flex-grow: 1;">
+            <ui:ProgressBar value="22" title="1 / 2s (50%)" />
+        </ui:VisualElement>
+        <ui:VisualElement class="divider" />
+        <ui:VisualElement name="tween-controls" class="table-controls" style="flex-direction: row;">
+            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="pause" class="icon-button">
+                <FlowTween.Editor.MaterialIcon tabindex="-1" icon="pause" />
+            </ui:Button>
+            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="cancel" class="icon-button">
+                <FlowTween.Editor.MaterialIcon tabindex="-1" icon="cancel" />
+            </ui:Button>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
