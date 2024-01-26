@@ -201,12 +201,8 @@ public class TweenManagerControlPanel : EditorWindow {
     }
 
     void SetOwnerField(ObjectField field, Object owner) {
-        if (owner == null) {
-            field.objectType = typeof(Object);
-        } else {
-            field.objectType = owner.GetType();
-            field.value = owner;
-        }
+        field.objectType = owner == null ? typeof(Object) : owner.GetType();
+        field.value = owner;
     }
     
     struct TweenListItemData {

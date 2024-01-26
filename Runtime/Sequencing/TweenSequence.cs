@@ -4,12 +4,13 @@ using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace FlowTween {
+namespace FlowTween.Sequencing {
 
 /// <summary>
-/// A sequence of actions and tweens.
+/// A sequence of tweens, actions and delays. Items in this type of
+/// sequence have a fixed duration.
 /// </summary>
-public class Sequence : Runnable {
+public class TweenSequence : Runnable {
     readonly List<Item> _items = new();
 
     int _lastItemIndex = -1;
@@ -39,17 +40,23 @@ public class Sequence : Runnable {
             t += _items[i].Duration / totalTime;
             if (t <= progress) continue;
             
-            while (i < _items.Count - 1 && _items[i + 1].Overlay) { i++; }
+            while (i < _items.Count - 1 && _items[i + 1].Overlay) i++;
             return i;
         }
 
         return _items.Count - 1;
     }
 
+    public override void Reset() {
+        base.Reset();
+        _items.Clear();
+        _lastItemIndex = -1;
+    }
+
     /// <summary>
     /// Adds an item to the sequence.
     /// </summary>
-    public Sequence Add(Item item) {
+    public TweenSequence Add(Item item) {
         _items.Add(item);
         return this;
     }
@@ -57,7 +64,7 @@ public class Sequence : Runnable {
     /// <summary>
     /// Adds a delay to the sequence.
     /// </summary>
-    public Sequence AddDelay(float seconds) {
+    public TweenSequence AddDelay(float seconds) {
         return Add(new Item {
             Duration = seconds
         });
@@ -66,7 +73,7 @@ public class Sequence : Runnable {
     /// <summary>
     /// Adds an action to the sequence.
     /// </summary>
-    public Sequence Add(Action action, bool overlay = false) {
+    public TweenSequence Add(Action action, bool overlay = false) {
         return Add(new Item {
             Action = action,
             Overlay = overlay
@@ -83,7 +90,7 @@ public class Sequence : Runnable {
     /// behavior if the tween's target properties are changed after
     /// the tween is created.
     /// </remarks>
-    public Sequence AddNow(Runnable runnable, bool overlay = false) {
+    public TweenSequence AddNow(Runnable runnable, bool overlay = false) {
         runnable.IsPaused = true;
         return Add(new Item {
             Duration = runnable.TotalDuration, 
@@ -98,7 +105,7 @@ public class Sequence : Runnable {
     /// are set automatically from the parameters.
     /// </summary>
     /// <param name="overlay">See <see cref="Item.Overlay"/>.</param>
-    public Sequence Add<T>(Func<Tween<T>> createTween, float duration, float delay = 0, bool overlay = false) {
+    public TweenSequence Add<T>(Func<Tween<T>> createTween, float duration, float delay = 0, bool overlay = false) {
         return Add(new Item {
             Duration = duration + delay,
             Action = () => createTween().SetDuration(duration).SetDelay(delay),
@@ -112,7 +119,7 @@ public class Sequence : Runnable {
     /// to the tween.
     /// </summary>
     /// <param name="overlay">See <see cref="Item.Overlay"/>.</param>
-    public Sequence Add<T>(Func<Tween<T>> createTween, TweenSettings settings, bool overlay = false) {
+    public TweenSequence Add<T>(Func<Tween<T>> createTween, TweenSettings settings, bool overlay = false) {
         return Add(new Item {
             Duration = settings.Duration + settings.Delay,
             Action = () => createTween().Apply(settings),
