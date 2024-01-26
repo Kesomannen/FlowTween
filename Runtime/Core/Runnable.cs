@@ -144,7 +144,7 @@ public abstract class Runnable : IEnumerator {
     
     protected virtual float GetProgress(float time) {
         if (Duration == 0) {
-            Debug.LogWarning("Tween duration is 0! Please ensure it is greater than 0 before the runnable starts running.");
+            Debug.LogWarning("Runnable duration is 0! Please ensure it is greater than 0 before the runnable starts running.");
             return 0;
         }
         

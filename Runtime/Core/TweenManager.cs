@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlowTween.Sequencing;
 using JetBrains.Annotations;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -218,7 +219,7 @@ public class TweenManager : MonoBehaviour {
     public Tween<T> NewTween<T>(Object owner = null) => Get<Tween<T>>(owner);
     
     /// <summary>
-    /// Gets a pooled instance of <see cref="Sequence"/>.
+    /// Gets a pooled instance of <see cref="TweenSequence"/>.
     /// If there are any inactive sequences, a sequence is reset and returned.
     /// Otherwise, a new sequence is created.
     /// </summary>
@@ -229,7 +230,7 @@ public class TweenManager : MonoBehaviour {
     /// will be used as the owner.
     /// Otherwise, the sequence will have no owner.
     /// </param>
-    public Sequence NewSequence(Object owner = null) => Get<Sequence>(owner);
+    public TweenSequence NewSequence(Object owner = null) => Get<TweenSequence>(owner);
     
     /// <summary>
     /// Tries to get the singleton instance and run the given action on it.

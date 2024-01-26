@@ -1,5 +1,9 @@
 :root {
-    --flow-material-symbol-size: 12px;
+    --flow-material-symbol-size: 12px
+}
+
+TemplateContainer {
+    flex-grow: 1;
 }
 
 .flow-material-icon {

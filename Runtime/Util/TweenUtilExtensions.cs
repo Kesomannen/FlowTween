@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using FlowTween.Sequencing;
+using UnityEngine;
 
 namespace FlowTween {
 
@@ -32,8 +33,8 @@ public static class TweenUtilExtensions {
     /// If at runtime and <see cref="TweenManager"/> is enabled, the sequence is created
     /// using <see cref="TweenManager.NewSequence"/>, otherwise the default constructor is used.
     /// </summary>
-    public static Sequence Sequence(this Object obj) {
-        return obj.Get<Sequence>();
+    public static TweenSequence Sequence(this Object obj) {
+        return obj.Get<TweenSequence>();
     }
     
     /// <summary>
