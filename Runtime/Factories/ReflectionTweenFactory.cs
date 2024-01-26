@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using FlowTween.Components;
 using UnityEngine;
@@ -15,6 +16,18 @@ namespace FlowTween {
 /// compile-time safety as using a factory.
 /// </remarks>
 public static class ReflectionTweenFactory {
+    static readonly Dictionary<Type, SupportedType> _supportedTypes = new() {
+        { typeof(float), new SupportedType(typeof(FloatTweenFactory<>), typeof(FloatFromToTweenerTarget<>)) },
+        { typeof(Vector2), new SupportedType(typeof(Vector2TweenFactory<>), typeof(Vector2FromToTweenerTarget<>)) },
+        { typeof(Vector3), new SupportedType(typeof(Vector3TweenFactory<>), typeof(Vector3FromToTweenerTarget<>)) },
+        { typeof(Quaternion), new SupportedType(typeof(QuaternionTweenFactory<>)) },
+        { typeof(Color), new SupportedType(typeof(ColorTweenFactory<>), typeof(ColorFromToTweenerTarget<>)) },
+    };
+    
+    public static ITweenerTarget CreateTweenerTarget<T, THolder>(string propertyName) where THolder : Object {
+        return CreateTweenerTargetAutoTyped(GetProperty(propertyName, typeof(THolder), typeof(T)));
+    }
+    
     /// <inheritdoc cref="CreateTween{T,THolder}"/>
     public static Tween<T> Tween<T, THolder>(this THolder obj, string propertyName, T to) where THolder : Object {
         return CreateTween(obj, propertyName, to);
@@ -43,40 +56,7 @@ public static class ReflectionTweenFactory {
     }
     
     public static ITweenFactory<T, THolder> Create<T, THolder>(string propertyName) where THolder : Object {
-        object factory;
-        var propertyType = typeof(T);
-
-        if (propertyType == typeof(float)) {
-            factory = Create<FloatTweenFactory<THolder>>(propertyName);
-        } else if (propertyType == typeof(Vector2)) {
-            factory = Create<Vector2TweenFactory<THolder>>(propertyName);
-        } else if (propertyType == typeof(Vector3)) {
-            factory = Create<Vector3TweenFactory<THolder>>(propertyName);
-        } else if (propertyType == typeof(Quaternion)) {
-            factory = Create<QuaternionTweenFactory<THolder>>(propertyName);
-        } else if (propertyType == typeof(Color)) {
-            factory = Create<ColorTweenFactory<THolder>>(propertyName);
-        } else {
-            throw new ArgumentException($"Type {propertyType} is not supported");
-        }
-
-        return (ITweenFactory<T, THolder>)factory;
-    }
-
-    /// <summary>
-    /// Creates a <see cref="TweenFactory{T,THolder}"/> that animates a property on an object, using reflection.
-    /// </summary>
-    /// <param name="propertyName">The name of the property.</param>
-    /// <typeparam name="T">The type of the property and factory.</typeparam>
-    /// <typeparam name="THolder">The factory's target object's type.</typeparam>
-    /// <typeparam name="TFactory">
-    /// The type of factory to create. It has to have a constructor in the form of
-    /// <code>ctor(Func&lt;THolder, T&gt; getter, Action&lt;THolder, T&gt; setter)</code>
-    /// </typeparam>
-    public static TFactory Create<T, THolder, TFactory>(string propertyName)
-        where TFactory : TweenFactory<T, THolder>
-    { 
-        return (TFactory)CreateFactory(typeof(T), typeof(THolder), typeof(TFactory), propertyName);
+        return (ITweenFactory<T, THolder>)CreateFactoryAutoTyped(GetProperty(propertyName, typeof(THolder), typeof(T)));
     }
     
     /// <summary>
@@ -92,8 +72,48 @@ public static class ReflectionTweenFactory {
     /// </list>
     /// </typeparam>
     public static TFactory Create<TFactory>(string propertyName) {
-        var factoryType = typeof(TFactory);
+        return (TFactory)CreateFactoryWithType(propertyName, typeof(TFactory));
+    }
+    
+    /// <summary>
+    /// Creates a <see cref="TweenFactory{T,THolder}"/> that animates a property on an object, using reflection.
+    /// </summary>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <typeparam name="T">The type of the property and factory.</typeparam>
+    /// <typeparam name="THolder">The factory's target object's type.</typeparam>
+    /// <typeparam name="TFactory">
+    /// The type of factory to create. It has to have a constructor in the form of
+    /// <code>ctor(Func&lt;THolder, T&gt; getter, Action&lt;THolder, T&gt; setter)</code>
+    /// </typeparam>
+    public static TFactory Create<T, THolder, TFactory>(string propertyName)
+        where TFactory : TweenFactory<T, THolder>
+    { 
+        return (TFactory)CreateFactoryWithType(GetProperty(propertyName, typeof(THolder), typeof(T)), typeof(TFactory));
+    }
+
+    internal static ITweenerTarget CreateTweenerTargetAutoTyped(PropertyInfo property) {
+        var factory = CreateFactoryAutoTyped(property);
+        var propertyType = property.PropertyType;
         
+        if (!_supportedTypes.TryGetValue(propertyType, out var supportedType)) {
+            throw new ArgumentException($"Type {propertyType} is not supported");
+        }
+        
+        var tweenerTargetType = supportedType.TweenerTargetType.MakeGenericType(property.DeclaringType);
+        return (ITweenerTarget)Activator.CreateInstance(tweenerTargetType, factory);
+    }
+    
+    static object CreateFactoryAutoTyped(PropertyInfo property) {
+        var propertyType = property.PropertyType;
+
+        if (!_supportedTypes.TryGetValue(propertyType, out var supportedType)) {
+            throw new ArgumentException($"Type {propertyType} is not supported");
+        }
+        
+        return CreateFactoryWithType(property, supportedType.FactoryType.MakeGenericType(property.DeclaringType));
+    }
+    
+    static object CreateFactoryWithType(string propertyName, Type factoryType) {
         var baseType = factoryType.BaseType;
         if (baseType is not { IsGenericType: true } || baseType.GetGenericTypeDefinition() != typeof(TweenFactory<,>)) {
             throw new ArgumentException($"Type {factoryType} does not inherit from TweenFactory");
@@ -111,52 +131,44 @@ public static class ReflectionTweenFactory {
             throw new ArgumentException($"Type {holderType} is not a subclass of UnityEngine.Object");
         }
         
-        return (TFactory)CreateFactory(propertyType, holderType, factoryType, propertyName);
+        return CreateFactoryWithType(GetProperty(propertyName, holderType, propertyType), factoryType);
     }
 
-    static object CreateFactory(Type propertyType, Type holderType, Type factoryType, string propertyName) {
-        var constructor = factoryType.GetConstructor(new[] {
-            GetGetterType(propertyType, holderType),
-            GetSetterType(propertyType, holderType)
-        });
+    static object CreateFactoryWithType(PropertyInfo property, Type factoryType) {
+        var getterType = typeof(Func<,>).MakeGenericType(property.DeclaringType, property.PropertyType);
+        var setterType = typeof(Action<,>).MakeGenericType(property.DeclaringType, property.PropertyType);
+
+        var constructor = factoryType.GetConstructor(new[] { getterType, setterType });
         
         if (constructor == null) {
             throw new ArgumentException($"Type {factoryType} does not have a constructor with the required arguments");
         }
         
-        var getter = CreateGetter(propertyType, holderType, propertyName);
-        var setter = CreateSetter(propertyType, holderType, propertyName);
-        
-        return constructor.Invoke(new[] { getter, setter });
+        return constructor.Invoke(new object[] {
+            Delegate.CreateDelegate(getterType, property.GetGetMethod()), 
+            Delegate.CreateDelegate(setterType, property.GetSetMethod())
+        });
     }
     
-    static object CreateSetter(Type propertyType, Type holderType, string propertyName) {
-        var property = GetProperty(propertyType, holderType, propertyName);
-        return Delegate.CreateDelegate(GetSetterType(propertyType, holderType), property.GetSetMethod());
-    }
-    
-    static object CreateGetter(Type propertyType, Type holderType, string propertyName) {
-        var property = GetProperty(propertyType, holderType, propertyName);
-        return Delegate.CreateDelegate(GetGetterType(propertyType, holderType), property.GetGetMethod());
-    }
-
-    static PropertyInfo GetProperty(Type propertyType, Type holderType, string name) {
+    static PropertyInfo GetProperty(string name, Type holderType, Type propertyType = null) {
         var property = holderType.GetProperty(name);
         if (property == null) {
             throw new ArgumentException($"Property '{name}' not found on type {holderType}");
         }
-        if (property.PropertyType != propertyType) {
+        if (propertyType != null && property.PropertyType != propertyType) {
             throw new ArgumentException($"Property '{name}' on type {holderType} is not of type {propertyType}");
         }
         return property;
     }
-    
-    static Type GetSetterType(Type propertyType, Type holderType) {
-        return typeof(Action<,>).MakeGenericType(holderType, propertyType);
-    }
 
-    static Type GetGetterType(Type propertyType, Type holderType) {
-        return typeof(Func<,>).MakeGenericType(holderType, propertyType);
+    struct SupportedType {
+        public Type FactoryType;
+        public Type TweenerTargetType;
+
+        public SupportedType(Type factoryType = null, Type tweenerTargetType = null) {
+            FactoryType = factoryType;
+            TweenerTargetType = tweenerTargetType;
+        }
     }
 }
 
