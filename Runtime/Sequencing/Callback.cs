@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace FlowTween.Sequencing {
 
-public static class Event {
+public static class Callback {
     public static IEnumerator Run(Action action) {
         action?.Invoke();
         yield break;
     }
     
-    public static Func<IEnumerator> Create(Action action) {
+    public static Func<IEnumerator> From(Action action) {
         return () => Run(action);
     }
 }
