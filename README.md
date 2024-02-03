@@ -5,7 +5,7 @@ You can use FlowTween fluently like any other tweening library:
 
 ```csharp
 transform.TweenX(10)
-    .SetEaseOut(EaseType.Cubic)
+    .EaseOut(EaseType.Cubic)
     .SetDuration(1);
 ```
 
