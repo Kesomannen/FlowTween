@@ -5,7 +5,7 @@ namespace FlowTween {
 
 /// <summary>
 /// A factory for creating tweens that animate <see cref="Color"/> properties.
-/// Also implements composite interfaces for animating RGBA and HSV parts of
+/// Also implements composite interfaces for animating RGBA and HSV components of
 /// the <see cref="Color"/>.
 /// </summary>
 /// <typeparam name="T">The type of the object that holds the property. Most commonly an <see cref="UnityEngine.Object"/>.</typeparam>
@@ -36,49 +36,53 @@ public class ColorTweenFactory<T> :
 {
     public ColorTweenFactory(Func<T, Color> getter, Action<T, Color> setter) 
         : base(getter, setter, Color.LerpUnclamped) { }
+    
+    public static ColorTweenFactory<T> From(string propertyName) {
+        return ReflectionTweenFactory.Create<ColorTweenFactory<T>>(propertyName);
+    }
+    
+    public void SetComponent(ref Color composite, RGBA component, float value) => composite[(int)component] = value;
+    public float GetComponent(Color composite, RGBA component) => composite[(int)component];
 
-    public void SetPart(ref Color composite, RGBA part, float value) => composite[(int)part] = value;
-    public float GetPart(Color composite, RGBA part) => composite[(int)part];
-
-    public void SetPart(ref Color composite, HSV part, float value) {
+    public void SetComponent(ref Color composite, HSV component, float value) {
         Color.RGBToHSV(composite, out var h, out var s, out var v);
-        switch (part) {
+        switch (component) {
             case HSV.H:
                 h = value; break;
             case HSV.S:
                 s = value; break;
             case HSV.V:
                 v = value; break;
-            default: throw new ArgumentOutOfRangeException(nameof(part), part, null);
+            default: throw new ArgumentOutOfRangeException(nameof(component), component, null);
         }
         composite = Color.HSVToRGB(h, s, v);
     }
 
-    public float GetPart(Color composite, HSV part) {
+    public float GetComponent(Color composite, HSV component) {
         Color.RGBToHSV(composite, out var h, out var s, out var v);
-        return part switch {
+        return component switch {
             HSV.H => h,
             HSV.S => s,
             HSV.V => v,
-            _ => throw new ArgumentOutOfRangeException(nameof(part), part, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(component), component, null)
         };
     }
 
     public float Lerp(float from, float to, float t) => Mathf.LerpUnclamped(from, to, t);
 
     /// <summary>
-    /// Casts this factory to a composite factory for animating RGBA parts of the <see cref="Color"/>.
+    /// Casts this factory to a composite factory for animating <see cref="Color"/> in RGBA space.
     /// </summary>
     public ICompositeTweenFactory<Color, T, float, RGBA> AsRGBA() => this;
     
     /// <summary>
-    /// Casts this factory to a composite factory for animating HSV parts of the <see cref="Color"/>.
+    /// Casts this factory to a composite factory for animating <see cref="Color"/> in HSV space.
     /// </summary>
     public ICompositeTweenFactory<Color, T, float, HSV> AsHSV() => this;
 }
 
 /// <summary>
-/// Parts of a Color.
+/// Components of a Color.
 /// </summary>
 public enum RGBA {
     /// <summary>
@@ -103,7 +107,7 @@ public enum RGBA {
 }
 
 /// <summary>
-/// Parts of a Color in HSV space.
+/// Components of a Color in HSV space.
 /// </summary>
 public enum HSV {
     /// <summary>

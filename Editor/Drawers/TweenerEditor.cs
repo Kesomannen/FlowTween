@@ -26,24 +26,10 @@ public class TweenerEditor : UnityEditor.Editor {
         var tweenList = root.Q("tweens");
         
         var playOnEnableAll = root.Q<Toggle>("play-on-enable-all");
-        playOnEnableAll.value = tweener.Tweens.All(tween => tween.PlayOnEnable);
-        playOnEnableAll.RegisterValueChangedCallback(evt => {
-            foreach (var tween in tweener.Tweens) {
-                tween.PlayOnEnable = evt.newValue;
-            }
-            
-            EditorUtility.SetDirty(tweener);
-        });
+        SetupAllToggle(playOnEnableAll, "_playOnEnable");
         
         var playOnDisableAll = root.Q<Toggle>("play-on-disable-all");
-        playOnDisableAll.value = tweener.Tweens.All(tween => tween.PlayOnDisable);
-        playOnDisableAll.RegisterValueChangedCallback(evt => {
-            foreach (var tween in tweener.Tweens) {
-                tween.PlayOnDisable = evt.newValue;
-            }
-            
-            EditorUtility.SetDirty(tweener);
-        });
+        SetupAllToggle(playOnDisableAll, "_playOnDisable");
         
         var selectedIndices = new HashSet<int>();
         var tweenMap = new Dictionary<int, VisualElement>();
@@ -58,8 +44,8 @@ public class TweenerEditor : UnityEditor.Editor {
             serializedObject.Update();
             RebuildList();
         };
-        
-        var preview = new TweenPreview();
+
+        var preview = new TweenPreview(root);
         IReadOnlyList<TweenerTargetConfig> previewingTweens = null;
         
         preview.OnStartedPlaying += () => {
@@ -205,10 +191,51 @@ public class TweenerEditor : UnityEditor.Editor {
             OnSelectionChanged();
         }
 
+        void SetupAllToggle(Toggle toggle, string propertyPath) {
+            UpdateValue();
+            
+            foreach (var property in EnumerateProperties()) {
+                toggle.TrackPropertyValue(property, _ => UpdateValue());
+            }
+            
+            /*
+            toggle.RegisterCallback<ClickEvent>(_ => {
+                foreach (var serializedProperty in EnumerateProperties()) {
+                    serializedProperty.boolValue = toggle.value;
+                }
+                UpdateValue();
+            });
+            */
+            
+            IEnumerable<SerializedProperty> EnumerateProperties() {
+                return EnumerateConfigs().Select(property => property.FindPropertyRelative(propertyPath));
+            }
+            
+            void UpdateValue() {
+                var enabledCount = EnumerateProperties().Count(property => property.boolValue);
+
+                if (enabledCount == 0) {
+                    toggle.value = false;
+                    toggle.RemoveFromClassList("mixed-toggle");
+                } else if (enabledCount == tweener.Tweens.Count) {
+                    toggle.value = true;
+                    toggle.RemoveFromClassList("mixed-toggle");
+                } else {
+                    toggle.AddToClassList("mixed-toggle");
+                }
+            }
+        }
+
         void OnSelectionChanged() {
             previewSelectedButton.SetEnabled(selectedIndices.Count > 0);
             previewAllButton.SetEnabled(tweener.Tweens.Count > 0);
             serializedObject.ApplyModifiedProperties();
+        }
+        
+        IEnumerable<SerializedProperty> EnumerateConfigs() {
+            for (var i = 0; i < tweener.Tweens.Count; i++) {
+                yield return GetTweenProperty(i);
+            }
         }
     }
 

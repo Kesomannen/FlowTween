@@ -1,0 +1,85 @@
+:root {
+    --flow-material-symbol-size: 12px
+}
+
+TemplateContainer {
+    flex-grow: 1;
+}
+
+.flow-material-icon {
+    font-size: 14px;
+    -unity-font-style: normal;
+    -unity-font-definition: url('project://database/Packages/com.kesomannen.flowtween/Editor/Resources/FlowTween/MaterialIcons-Regular%20SDF.asset?fileID=11400000&guid=69b4263c44c3af64cae0bb419f51ec07&type=2#MaterialIcons-Regular SDF');
+}
+
+.icon-button {
+    padding: 3px 5px;
+    flex-direction: row;
+    justify-content: center;
+    padding-right: 3px;
+}
+
+.icon-button__selected {
+    background-color: rgb(70, 96, 124);
+}
+
+.remove-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1px 5px;
+    padding-right: 5px;
+}
+
+.relative-label {
+    -unity-text-align: middle-left;
+    margin-left: 8px;
+}
+
+.unity-list-view__item {
+    background-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0.2);
+    border-top-color: rgba(0, 0, 0, 0.2);
+    border-left-color: rgba(0, 0, 0, 0.2);
+    border-right-color: rgba(0, 0, 0, 0.2);
+    padding-right: 8px;
+    padding-left: 8px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.unity-list-view__item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+Foldout > #unity-content {
+    margin-bottom: 8px;
+}
+
+#advanced {
+    margin-bottom: 6px;
+}
+
+.icon-button-option {
+    margin-left: 8px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-right: 4px;
+    padding-left: 6px;
+    margin-right: -2px;
+}
+
+.embedded-field {
+    min-width: 150px;
+    flex-direction: row;
+}
+
+.embedded-field > Label {
+    min-width: 0;
+    flex-shrink: 1;
+    margin-left: 2px;
+}
+
+.mixed-toggle #unity-checkmark {
+    background-image: url('project://database/Assets/UnityDefaultRuntimeTheme.tss?fileID=4456449167576933126&guid=2bedfc9b2f5e6bc4ab960842ed96621d&type=3#check-dash@2x');
+}

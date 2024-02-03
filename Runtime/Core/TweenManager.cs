@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FlowTween.Sequencing;
 using JetBrains.Annotations;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -8,8 +9,12 @@ using Object = UnityEngine.Object;
 namespace FlowTween {
     
 /// <summary>
-/// Singleton for running and pooling <see cref="TweenBase"/> objects at runtime.
+/// Singleton for running and pooling <see cref="Runnable"/> objects at runtime.
+/// All extension methods for creating tweens and sequences automatically add
+/// the created tween to this.
 /// </summary>
+[DisallowMultipleComponent]
+[AddComponentMenu("FlowTween/Tween Manager")]
 public class TweenManager : MonoBehaviour {
     [SerializeField] bool _enabled = true;
     [SerializeField] bool _doNullChecks = true;
@@ -20,28 +25,40 @@ public class TweenManager : MonoBehaviour {
 
     /// <summary>
     /// The singleton instance of the <see cref="TweenManager"/>.
-    /// It's not recommended to use this directly, instead use <see cref="TweenManager.TryAccess"/>.
+    /// It's not recommended to use this directly since it might return null,
+    /// instead use <see cref="TweenManager.TryAccess"/>.
     /// </summary>
     [CanBeNull]
     public static TweenManager Singleton {
         get {
-            if (!Application.isPlaying) {
+            if (!Application.isPlaying) 
                 return null;
+
+            if (_singleton != null) return _singleton._enabled ? _singleton : null;
+            
+            var found = FindObjectsOfType<TweenManager>();
+            switch (found.Length) {
+                case 0:
+                    _singleton = new GameObject("TweenManager").AddComponent<TweenManager>();
+                    DontDestroyOnLoad(_singleton);
+                    break;
+                
+                case 1:
+                    _singleton = found[0];
+                    break;
+                    
+                default:
+                    _singleton = found[0];
+                    Debug.LogWarning("Multiple TweenManagers found in scene! Please ensure there is only one.");
+                    break;
             }
             
-            if (_singleton != null) return _singleton._enabled ? _singleton : null;
-            _singleton = FindObjectOfType<TweenManager>();
-
-            if (_singleton != null) return _singleton._enabled ? _singleton : null;
-            _singleton = new GameObject("TweenManager").AddComponent<TweenManager>();
-            DontDestroyOnLoad(_singleton);
-
-            return _singleton;
+            return _singleton._enabled ? _singleton : null;
         }
     }
 
-    readonly Dictionary<Type, Queue<TweenBase>> _inactive = new();
-    readonly List<TweenInstance> _active = new();
+    readonly Dictionary<Type, Queue<Runnable>> _inactive = new();
+    readonly List<RunnableInstance> _active = new();
 
     /// <summary>
     /// Whether or not to do null checks on
@@ -84,11 +101,14 @@ public class TweenManager : MonoBehaviour {
     /// The total number of created tweens, both active and inactive.
     /// </summary>
     public int TotalTweenCount => ActiveTweenCount + InactiveTweenCount;
+    
+    public IReadOnlyDictionary<Type, Queue<Runnable>> InactiveTweens => _inactive;
+    public IReadOnlyList<RunnableInstance> ActiveTweens => _active;
 
     void Update() {
         for (var i = 0; i < _active.Count; i++) {
             var instance = _active[i];
-            var tween = instance.Tween;
+            var tween = instance.Runnable;
 
             var isNull = DoNullChecks && instance.HasOwner && instance.Owner == null;
             if (!isNull) {
@@ -103,23 +123,23 @@ public class TweenManager : MonoBehaviour {
         }
     }
 
-    void Return(TweenBase tween) {
-        var type = tween.GetType();
+    void Return(Runnable runnable) {
+        var type = runnable.GetType();
         if (!_inactive.TryGetValue(type, out var queue)) {
-            _inactive.Add(type, queue = new Queue<TweenBase>());
+            _inactive.Add(type, queue = new Queue<Runnable>());
         }
 
-        queue.Enqueue(tween);
+        queue.Enqueue(runnable);
     }
 
     /// <summary>
     /// Cancels a tween.
     /// </summary>
     /// <param name="tween">The tween to cancel.</param>
-    /// <param name="callOnComplete">Whether or not to call the tween's <see cref="TweenBase.CompleteAction"/></param>
-    public void Cancel(TweenBase tween, bool callOnComplete = false) {
+    /// <param name="callOnComplete">Whether or not to call the tween's <see cref="Runnable.CompleteAction"/></param>
+    public void Cancel(Runnable tween, bool callOnComplete = false) {
         if (callOnComplete) tween.Cancel(false);
-        _active.RemoveAll(t => t.Tween == tween);
+        _active.RemoveAll(t => t.Runnable == tween);
         Return(tween);
     }
 
@@ -130,21 +150,21 @@ public class TweenManager : MonoBehaviour {
     /// The owner of the tweens to cancel.
     /// Any tweens owned by components on this are also cancelled.
     /// </param>
-    /// <param name="callOnComplete">Whether or not to call the tweens' <see cref="TweenBase.CompleteAction"/></param>
+    /// <param name="callOnComplete">Whether or not to call the tweens' <see cref="Runnable.CompleteAction"/></param>
     public void CancelObject(GameObject obj, bool callOnComplete = false) {
         for (var i = 0; i < _active.Count; i++) {
             var instance = _active[i];
             if (instance.Owner != obj) continue;
 
-            Cancel(instance.Tween, callOnComplete);
+            Cancel(instance.Runnable, callOnComplete);
             i--;
         }
     }
 
     /// <summary>
     /// Gets a pooled instance of <typeparamref name="T"/>.
-    /// Only use for advanced cases, otherwise use <see cref="NewTween{T}"/>
-    /// or one of the extension methods.
+    /// Only use for advanced cases, otherwise use <see cref="NewTween{T}"/>,
+    /// <see cref="NewSequence"/> or one of the extension methods.
     /// If there are any inactive instances of type <typeparamref name="T"/>,
     /// an instance is reset and returned.
     /// Otherwise, a new instance is created.
@@ -156,11 +176,11 @@ public class TweenManager : MonoBehaviour {
     /// will be used as the owner.
     /// Otherwise, the tween will have no owner.
     /// </param>
-    /// <typeparam name="T">A subclass of <see cref="TweenBase"/> to get.</typeparam>
+    /// <typeparam name="T">A subclass of <see cref="Runnable"/> to get.</typeparam>
     /// <exception cref="InvalidOperationException">
     /// The maximum number of tweens has been reached (see <see cref="MaxTweens"/>).
     /// </exception>
-    public T Get<T>(Object owner = null) where T : TweenBase, new() {
+    public T Get<T>(Object owner = null) where T : Runnable, new() {
         var gameObjectOwner = owner switch {
             GameObject o => o,
             Component c => c.gameObject,
@@ -181,15 +201,14 @@ public class TweenManager : MonoBehaviour {
             tween = new T();
         }
 
-        _active.Add(TweenInstance.From(tween, gameObjectOwner));
+        _active.Add(RunnableInstance.From(tween, gameObjectOwner));
         return tween;
     }
     
     /// <summary>
     /// Gets a pooled instance of <see cref="Tween{T}"/>.
     /// If there are any inactive tweens of type <see cref="Tween{T}"/>,
-    /// a tween is reset and returned.
-    /// Otherwise, a new tween is created.
+    /// a tween is reset and returned. Otherwise, a new tween is created.
     /// </summary>
     /// <param name="owner">
     /// The owner of the tween, optional.
@@ -200,6 +219,20 @@ public class TweenManager : MonoBehaviour {
     /// </param>
     /// <typeparam name="T">The type of the tween to get.</typeparam>
     public Tween<T> NewTween<T>(Object owner = null) => Get<Tween<T>>(owner);
+    
+    /// <summary>
+    /// Gets a pooled instance of <see cref="TweenSequence"/>.
+    /// If there are any inactive sequences, a sequence is reset and returned.
+    /// Otherwise, a new sequence is created.
+    /// </summary>
+    /// <param name="owner">
+    /// The owner of the tween, optional.
+    /// If it's a <see cref="GameObject"/>, it will be used as the owner.
+    /// If it's a <see cref="Component"/>, its <see cref="Component.gameObject"/>
+    /// will be used as the owner.
+    /// Otherwise, the sequence will have no owner.
+    /// </param>
+    public TweenSequence NewSequence(Object owner = null) => Get<TweenSequence>(owner);
     
     /// <summary>
     /// Tries to get the singleton instance and run the given action on it.
@@ -227,19 +260,19 @@ public class TweenManager : MonoBehaviour {
         return true;
     }
 
-    readonly struct TweenInstance {
-        public readonly TweenBase Tween;
+    public readonly struct RunnableInstance {
+        public readonly Runnable Runnable;
         public readonly GameObject Owner;
         public readonly bool HasOwner;
 
-        public TweenInstance(TweenBase tween, GameObject owner, bool hasOwner) {
-            Tween = tween;
+        public RunnableInstance(Runnable runnable, GameObject owner, bool hasOwner) {
+            Runnable = runnable;
             Owner = owner;
             HasOwner = hasOwner;
         }
         
-        public static TweenInstance From(TweenBase tween, GameObject owner) {
-            return new TweenInstance(tween, owner, owner != null);
+        public static RunnableInstance From(Runnable tween, GameObject owner) {
+            return new RunnableInstance(tween, owner, owner != null);
         }
     }
 }

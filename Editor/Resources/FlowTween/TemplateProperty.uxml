@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/Plugins/FlowTween/Editor/Resources/FlowTween/FlowTweenStyle.uss?fileID=7433441132597879392&amp;guid=1652f00bc0ccdfa47868f7330aac3e70&amp;type=3#FlowTweenStyle" />
-    <ui:Foldout text="Foldout" value="true" name="property-foldout">
+    <Style src="project://database/Packages/com.kesomannen.flowtween/Editor/Resources/FlowTween/FlowTweenStyle.uss?fileID=7433441132597879392&amp;guid=1652f00bc0ccdfa47868f7330aac3e70&amp;type=3#FlowTweenStyle" />
+    <ui:Foldout text="Foldout" value="false" name="property-foldout">
         <ui:VisualElement style="flex-grow: 0; flex-direction: row; align-items: center; align-self: stretch;">
             <uie:ObjectField label="Template" name="template-field" binding-path="_templateValue" class="unity-base-field__aligned" style="flex-grow: 1; flex-shrink: 1;" />
             <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="save-button" class="icon-button" style="flex-direction: row; margin-left: 8px;">

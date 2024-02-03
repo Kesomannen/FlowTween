@@ -1,0 +1,57 @@
+.table-legend {
+    margin-bottom: 4px;
+}
+
+.table-legend Label {
+    -unity-font-style: bold;
+}
+
+.divider {
+    background-color: rgba(210, 210, 210, 0.4);
+    width: 1px;
+    margin-right: 6px;
+    margin-left: 6px;
+}
+
+.table-layout {
+    flex-direction: row;
+}
+
+.table-layout .table-name {
+    min-width: 180px;
+    flex-grow: 1;
+}
+
+.table-layout .table-owner {
+    flex-grow: 1;
+    min-width: 130px;
+}
+
+.table-layout .table-progress {
+    flex-grow: 1;
+    width: 80px;
+}
+
+.table-layout .table-controls {
+    width: 80px;
+}
+
+.tween {
+}
+
+.tween #tween-controls Button {
+    flex-grow: 1;
+    margin-right: 1px;
+    margin-left: 1px;
+}
+
+.panel {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-right: 4px;
+    margin-left: 4px;
+}
+
+.unity-collection-view__item {
+    padding-left: 4px;
+}

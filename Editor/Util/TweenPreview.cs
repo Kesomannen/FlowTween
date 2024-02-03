@@ -1,12 +1,13 @@
 ﻿using System;
 using UnityEditor;
+using UnityEngine.UIElements;
 
 namespace FlowTween.Editor {
 
 /// <summary>
 /// A helper class for previewing tweens in the editor.
 /// </summary>
-public class TweenPreview {
+public class TweenPreview : IDisposable {
     TweenBase[] _tweens;
     int _playCount;
     float _lastUpdate;
@@ -32,6 +33,16 @@ public class TweenPreview {
     /// Called when all tweens have stopped playing.
     /// </summary>
     public event Action OnStoppedPlaying;
+
+    public TweenPreview() { }
+    
+    /// <summary>
+    /// Creates a new preview and attaches it to the given element,
+    /// making sure to stop all tweens when the element is detached.
+    /// </summary>
+    public TweenPreview(VisualElement element) {
+        Attach(element);
+    }
     
     /// <summary>
     /// Plays the given tweens.
@@ -116,6 +127,22 @@ public class TweenPreview {
         _tweens = null;
         
         OnStoppedPlaying?.Invoke();
+    }
+
+    /// <summary>
+    /// Attaches this preview to the given element,
+    /// making sure to stop all tweens when the element is detached.
+    /// </summary>
+    public void Attach(VisualElement element) {
+        element.RegisterCallback<DetachFromPanelEvent>(_ => Dispose());
+    }
+    
+    public void Dispose() {
+        StopAll();
+        
+        OnTweenStoppedOrRestarted = null;
+        OnStartedPlaying = null;
+        OnStoppedPlaying = null;
     }
 }
 

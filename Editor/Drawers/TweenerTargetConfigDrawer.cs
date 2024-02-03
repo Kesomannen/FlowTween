@@ -43,9 +43,9 @@ internal class TweenerTargetConfigDrawer : PropertyDrawer {
             RebindData();
         });
 
-        resetOnDisable.SetVisible(playOnDisable.value);
+        resetOnDisable.SetEnabled(playOnDisable.value);
         playOnDisable.RegisterValueChangedCallback(evt => {
-            resetOnDisable.SetVisible(evt.newValue);
+            resetOnDisable.SetEnabled(evt.newValue);
         });
 
         var previewButton = root.Q<Button>("preview-button");
@@ -60,9 +60,9 @@ internal class TweenerTargetConfigDrawer : PropertyDrawer {
                 previewButton.SetEnabled(false);
                 return root;
             }
-        }
+        } 
 
-        var preview = new TweenPreview();
+        var preview = new TweenPreview(root);
         preview.OnTweenStoppedOrRestarted += _ => {
             config.ApplySnapshot(gameObject);
         };

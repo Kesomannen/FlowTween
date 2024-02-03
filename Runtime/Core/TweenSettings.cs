@@ -1,4 +1,5 @@
 ﻿using System;
+using Codice.Client.BaseCommands;
 using UnityEngine;
 
 namespace FlowTween {
@@ -11,10 +12,13 @@ namespace FlowTween {
 public class TweenSettings {
     [Min(0)]
     [SerializeField] float _duration = 1;
+    [Min(0)]
+    [SerializeField] float _delay;
     [SerializeField] EasingType _easeType;
-    [SerializeField] EaseType _presetEase;
+    [SerializeField] Ease _presetEase;
     [SerializeField] AnimationCurve _customEase;
     [SerializeField] LoopMode _loopMode;
+    [SerializeField] int _loopCount = -1;
 
     /// <summary>
     /// Duration in seconds, must be greater than 0.
@@ -23,12 +27,20 @@ public class TweenSettings {
         get => _duration;
         set => _duration = Mathf.Max(0, value);
     }
+    
+    /// <summary>
+    /// Delay in seconds, must be greater than 0.
+    /// </summary>
+    public float Delay {
+        get => _delay;
+        set => _delay = Mathf.Max(0, value);
+    }
 
     /// <summary>
     /// The preset easing type to use.
     /// Setting this also sets <see cref="EaseType"/> to <see cref="EasingType.Preset"/>.
     /// </summary>  
-    public EaseType PresetEase {
+    public Ease PresetEase {
         get => _presetEase;
         set {
             _presetEase = value;
@@ -73,14 +85,42 @@ public class TweenSettings {
         set => _loopMode = value;
     }
     
+    public int? LoopCount {
+        get => _loopCount == -1 ? null : _loopCount;
+        set => _loopCount = value ?? -1;
+    }
+
+    public TweenSettings() { }
+    
+    public TweenSettings(float duration, Ease ease) {
+        Duration = duration;
+        PresetEase = ease;
+    }
+
+    public TweenSettings(float duration, AnimationCurve curve) {
+        Duration = duration;
+        CustomEase = curve;
+    }
+
+    public TweenSettings(TweenSettings settings) {
+        _duration = settings._duration;
+        _delay = settings._delay;
+        _easeType = settings._easeType;
+        _presetEase = settings._presetEase;
+        _customEase = settings._customEase;
+        _loopMode = settings._loopMode;
+        _loopCount = settings._loopCount;
+    }
+    
     /// <summary>
     /// Applies the settings to the given tween.
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// <see cref="EaseType"/> is not a valid <see cref="EasingType"/> value
-    /// </exception>
     public void Apply(TweenBase tween) {
-        tween.SetDuration(_duration).Loop(_loopMode);
+        tween.SetDuration(_duration);
+        
+        tween.Delay = _delay;
+        tween.LoopMode = _loopMode;
+        tween.Loops = LoopCount;
 
         switch (_easeType) {
             case EasingType.Preset:

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace FlowTween.Components {
@@ -6,7 +8,6 @@ namespace FlowTween.Components {
 /// <summary>
 /// An implementation of <see cref="ITweenerTarget{T,THolder,TData}"/> that
 /// simply tweens a property between two values using a <see cref="ITweenFactory{T,THolder}"/>.
-/// It relies on a data type that implements <see cref="IFromToTweenerTargetData{T}"/>.
 /// </summary>
 /// <seealso cref="FloatFromToTweenerTarget{T}"/>
 /// <seealso cref="Vector3FromToTweenerTarget{T}"/>
@@ -15,7 +16,7 @@ namespace FlowTween.Components {
 /// <inheritdoc cref="ITweenerTarget{T,THolder,TData}"/>
 public class FromToTweenerTarget<T, THolder, TData> : ITweenerTarget<T, THolder, TData>
     where THolder : Component 
-    where TData : class, IFromToTweenerTargetData<T>, new() 
+    where TData : FromToTweenerTargetData<T>, new() 
 {
     readonly ITweenFactory<T, THolder> _factory;
     
@@ -44,15 +45,32 @@ public class FromToTweenerTarget<T, THolder, TData> : ITweenerTarget<T, THolder,
     }
 
     public object GetData() {
-        return new TData();
+        var data = new TData();
+        data.Init(typeof(THolder));
+        return data;
     }
 
-    protected (T, T) GetValues(TData data, THolder holder) {
-        var current = _factory.Get(holder); 
+    protected virtual (T, T) GetValues(TData data, THolder holder) {
         return (
-            data.GetStartValue(current),
-            data.GetEndValue(current)
+            Evaluate(data, holder, data.Start),
+            Evaluate(data, holder, data.End)
         );
+    }
+    
+    protected T Evaluate(TData data, THolder holder, FromToTweenerTargetValue<T> value) {
+        if (!value.Relative) return value.Value;
+            
+        var sourceValue = _factory.Get(GetSource(value, holder));
+        var operation = data.GetOperations()[value.OperationName];
+        return operation(sourceValue, value.Value);
+    }
+
+    protected THolder GetSource<_>(FromToTweenerTargetValue<_> value, THolder holder) {
+        if (value.Source == null) return holder;
+        if (value.Source is THolder sourceHolder) return sourceHolder;
+        
+        Debug.LogError($"Source component {value.Source} is not of type {typeof(THolder)}");
+        return holder;
     }
 }
 

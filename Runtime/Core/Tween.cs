@@ -3,7 +3,8 @@
 namespace FlowTween {
 
 /// <summary>
-/// The main tween class.
+/// The main tween class. Can be configured using a
+/// builder-like pattern.
 /// </summary>
 public class Tween<T> : TweenBase {
     /// <summary>
@@ -15,7 +16,7 @@ public class Tween<T> : TweenBase {
     /// End value of this tween.
     /// </summary>
     public T End { get; set; }
-
+    
     /// <summary>
     /// Invoked every update with the current value.
     /// </summary>
@@ -23,9 +24,9 @@ public class Tween<T> : TweenBase {
     
     /// <summary>
     /// Function to linearly interpolate between <see cref="Start"/> and <see cref="End"/>.
-    /// Make sure this isn't null when the tween starts (usually the next frame).
+    /// Should be unclamped. Make sure this isn't null when the tween starts (usually the next frame).
     /// </summary>
-    public Func<T, T, float, T> LerpFunction { get; set; }
+    public LerpFunction<T> LerpFunction { get; set; }
     
     /// <summary>
     /// The current value of the tween.
@@ -39,17 +40,10 @@ public class Tween<T> : TweenBase {
     }
 
     public override void Cancel(bool safe) {
-        base.Cancel(safe);
         if (!safe) {
             UpdateAction?.Invoke(End);
         }
-    }
-
-    /// <summary>
-    /// Reverses the start and end values.
-    /// </summary>
-    public override void Reverse() {
-        (Start, End) = (End, Start);
+        base.Cancel(safe);
     }
 
     public override void Reset() {
@@ -85,12 +79,17 @@ public class Tween<T> : TweenBase {
     }
 
     /// <summary>
-    /// Set's <see cref="LerpFunction"/>.
+    /// Sets <see cref="LerpFunction"/>.
     /// </summary>
-    public Tween<T> Lerp(Func<T, T, float, T> lerp) {
+    public Tween<T> Lerp(LerpFunction<T> lerp) {
         LerpFunction = lerp;
         return this;
     }
 }
+
+/// <summary>
+/// A function that linearly interpolates between two values.
+/// </summary>
+public delegate T LerpFunction<T>(T from, T to, float t);
 
 }

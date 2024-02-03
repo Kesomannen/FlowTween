@@ -1,0 +1,44 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.kesomannen.flowtween/Editor/Resources/FlowTween/TweenManagerControlPanel.uss?fileID=7433441132597879392&amp;guid=2ee9065be3b71d04495001d3fff4a809&amp;type=3#TweenManagerControlPanel" />
+    <Style src="project://database/Packages/com.kesomannen.flowtween/Editor/Resources/FlowTween/FlowTween.uss?fileID=7433441132597879392&amp;guid=1652f00bc0ccdfa47868f7330aac3e70&amp;type=3#FlowTween" />
+    <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
+        <ui:VisualElement name="left-panel" class="panel" style="flex-grow: 2;">
+            <ui:VisualElement name="help-message" style="background-color: rgba(0, 0, 0, 0.1); padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; flex-direction: row;">
+                <FlowTween.Editor.MaterialIcon tabindex="-1" icon="info" />
+                <ui:Label tabindex="-1" text="Enter play mode to enable control panel" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-text-align: middle-left;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="tweens" style="flex-grow: 1; margin-left: 6px; margin-right: 6px; margin-top: 4px;">
+                <ui:VisualElement class="table-legend table-layout" style="flex-direction: row;">
+                    <ui:Label tabindex="-1" text="Name" parse-escape-sequences="true" display-tooltip-when-elided="true" class="table-name" />
+                    <ui:VisualElement class="divider" />
+                    <ui:Label tabindex="-1" text="Owner" parse-escape-sequences="true" display-tooltip-when-elided="true" class="table-owner" />
+                    <ui:VisualElement class="divider" />
+                    <ui:Label tabindex="-1" text="Progress" parse-escape-sequences="true" display-tooltip-when-elided="true" class="table-progress" />
+                </ui:VisualElement>
+                <ui:ListView focusable="true" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="divider" />
+        <ui:VisualElement name="right-panel" class="panel" style="flex-grow: 1; width: 240px;">
+            <ui:VisualElement name="tween-properties" style="flex-grow: 1;">
+                <ui:VisualElement style="flex-direction: row; margin-bottom: 4px;">
+                    <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="name" style="-unity-font-style: bold; font-size: 16px; flex-grow: 1; -unity-text-align: middle-left;" />
+                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="pause" class="icon-button">
+                        <FlowTween.Editor.MaterialIcon tabindex="-1" icon="pause" />
+                    </ui:Button>
+                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="cancel" class="icon-button">
+                        <FlowTween.Editor.MaterialIcon tabindex="-1" icon="cancel" />
+                    </ui:Button>
+                </ui:VisualElement>
+                <ui:VisualElement name="readonly" style="flex-grow: 1;">
+                    <uie:ObjectField label="Owner" name="owner" />
+                    <ui:EnumField label="Loop Mode" type="FlowTween.LoopMode, Kesomannen.FlowTween" name="loop-mode" />
+                    <ui:IntegerField label="Loops" value="1" name="loops" />
+                    <ui:FloatField label="Duration (s)" value="42,2" name="duration" />
+                    <ui:FloatField label="Delay (s)" value="42,2" name="delay" />
+                    <ui:Toggle label="Ignore Timescale" name="ignore-timescale" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

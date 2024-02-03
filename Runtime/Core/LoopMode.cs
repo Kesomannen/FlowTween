@@ -1,5 +1,5 @@
 ﻿namespace FlowTween {
-    
+
 /// <summary>
 /// Specifies how a tween should loop.
 /// You can apply one to a tween with <c>tween.Loop(...)</c>.
@@ -9,15 +9,14 @@ public enum LoopMode {
     /// Run from start to end, then stops.
     /// </summary>
     None,
-    
+
     /// <summary>
-    /// Runs from start to end, then repeats until the tween is cancelled.
+    /// Runs from start to end, then restarts from the beginning.
     /// </summary>
     Loop,
-    
+
     /// <summary>
-    /// Runs from start to end, then reverses and
-    /// repeats until the tween is cancelled.
+    /// Goes back and forth between start and end.
     /// </summary>
     PingPong
 }

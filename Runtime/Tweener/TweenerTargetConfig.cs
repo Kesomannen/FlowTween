@@ -2,6 +2,7 @@
 using System.Linq;
 using FlowTween.Templates;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace FlowTween.Components {
     
@@ -18,10 +19,13 @@ public class TweenerTargetConfig {
     [SerializeField] string _targetId = FallbackTargetId;
     [SerializeField] string _prevTargetId = FallbackTargetId;
     [SerializeReference] object _data;
-    [SerializeField] TweenSettingsProperty _settings;
+    [SerializeField] TweenSettingsProperty _settings = new();
     [SerializeField] bool _playOnEnable;
     [SerializeField] bool _playOnDisable;
     [SerializeField] bool _resetOnDisable = true;
+    [SerializeField] bool _ignoreTimescale;
+    [SerializeField] UnityEvent _onStart;
+    [SerializeField] UnityEvent _onComplete;
     [SerializeField] bool _selected;
 
     /// <summary>
@@ -96,6 +100,10 @@ public class TweenerTargetConfig {
     public TweenerTargetConfig() {
         RefreshTarget();
     }
+
+    public TweenerTargetConfig(string targetId, object data) {
+        SetTargetId(targetId, data);
+    }
     
     /// <summary>
     /// Creates a new tween from this configuration.
@@ -104,7 +112,12 @@ public class TweenerTargetConfig {
         var target = GetTarget();
         var component = GetComponent(gameObject);
         if (component != null) {
-            return target.GetTween(component, _data).Apply(Settings.Value);
+            _onStart.Invoke();
+            
+            return target.GetTween(component, _data)
+                .SetIgnoreTimescale(_ignoreTimescale)
+                .OnComplete(_onComplete.Invoke)
+                .Apply(Settings.Value);
         }
         
         Debug.LogError($"Target component of type {target.ComponentType} is missing", component);
@@ -165,8 +178,8 @@ public class TweenerTargetConfig {
     /// and checking its type, or skip that and use the type safe <see cref="SetTarget{T,THolder,TData}"/> instead.
     /// </param>
     /// <exception cref="ArgumentException"><paramref name="data"/> was not the correct type.</exception>
-    public void SetTargetId(string targetId, object data) {
-        if (targetId == _targetId) return;
+    public TweenerTargetConfig SetTargetId(string targetId, object data) {
+        if (targetId == _targetId) return this;
         
         _targetId = targetId;
         RefreshTarget();
@@ -175,6 +188,8 @@ public class TweenerTargetConfig {
         } else {
             throw new ArgumentException($"Data type mismatch: {_data.GetType()} != {data.GetType()}");
         }
+
+        return this;
     }
 
     /// <summary>
@@ -190,12 +205,12 @@ public class TweenerTargetConfig {
     /// and checking its type, or skip that and use the type safe <see cref="SetTarget{T,THolder,TData}"/> instead.
     /// </param>
     /// <exception cref="ArgumentException"><paramref name="target"/> was not present in <see cref="TweenerTargets"/>.</exception>
-    public void SetTargetUntyped(ITweenerTarget target, object data) {
+    public TweenerTargetConfig SetTargetUntyped(ITweenerTarget target, object data) {
         var id = TweenerTargets.Targets.FirstOrDefault(pair => pair.Value == target).Key;
         if (id == null) {
             throw new ArgumentException($"Target {target} is not registered in TweenerTargets");
         }
-        SetTargetId(id, data);
+        return SetTargetId(id, data);
     }
     
     /// <summary>
@@ -204,11 +219,11 @@ public class TweenerTargetConfig {
     /// <param name="target">The target to use. Must be present in <see cref="TweenerTargets"/>.</param>
     /// <param name="data">The data to use for the target.</param>
     /// <exception cref="ArgumentException"><paramref name="target"/> was not present in <see cref="TweenerTargets"/>.</exception>
-    public void SetTarget<T, THolder, TData>(ITweenerTarget<T, THolder, TData> target, TData data) 
+    public TweenerTargetConfig SetTarget<T, THolder, TData>(ITweenerTarget<T, THolder, TData> target, TData data) 
         where THolder : Component 
         where TData : class
     {
-        SetTargetUntyped(target, data);
+        return SetTargetUntyped(target, data);
     }
 
     void RefreshTarget() {

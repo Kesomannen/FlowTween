@@ -25,7 +25,7 @@ public static class TweenerTargets {
     /// <br/><br/>The naming scheme for ids is <c>&lt;ComponentName&gt;&lt;PropertyName&gt;</c>, e.g. <c>TransformPosition</c>.
     ///
     /// <br/><br/>Domain reloads clear the registry to the default values, so if you want your target
-    /// to be available in the editor, you will need to register them with <see cref="UnityEditor.InitializeOnLoadAttribute"/>;.
+    /// to be available in the editor, you will need to register them with <see cref="UnityEditor.InitializeOnLoadAttribute"/>.
     /// </summary>
     /// <example>
     /// <code>
@@ -70,15 +70,15 @@ public static class TweenerTargets {
         { "TransformRotation", new Vector3FromToTweenerTarget<Transform>(TransformTweens.EulerAngles) },
         { "TransformLocalRotation", new Vector3FromToTweenerTarget<Transform>(TransformTweens.LocalEulerAngles) },
         { "TransformScale", new Vector3FromToTweenerTarget<Transform>(TransformTweens.Scale) },
-        { "TransformUniformScale", new FloatFromToTweenerTarget<Transform>(TransformTweens.UniformScale) },
+        { "TransformScale (Uniform)", new FloatFromToTweenerTarget<Transform>(TransformTweens.UniformScale) },
         { "RectTransformAnchoredPosition", new Vector2FromToTweenerTarget<RectTransform>(RectTransformTweens.AnchoredPosition) },
         { "RectTransformSizeDelta", new Vector2FromToTweenerTarget<RectTransform>(RectTransformTweens.SizeDelta) },
         { "GraphicColor", new ColorFromToTweenerTarget<Graphic>(GraphicTweens.Color) },
         { "GraphicAlpha", new FloatFromToTweenerTarget<Graphic>(GraphicTweens.Color.AsRGBA().WithPart(RGBA.A)) },
-        { "GraphicGradient", new GradientTweenerTarget<Graphic>(GraphicTweens.Color) },
+        { "GraphicColor (Gradient)", new GradientTweenerTarget<Graphic>(GraphicTweens.Color) },
         { "CanvasGroupAlpha", new FloatFromToTweenerTarget<CanvasGroup>(CanvasGroupTweens.Alpha) },
         { "SpriteRendererColor", new ColorFromToTweenerTarget<SpriteRenderer>(SpriteRendererTweens.Color) },
-        { "SpriteRendererGradient", new GradientTweenerTarget<SpriteRenderer>(SpriteRendererTweens.Color) },
+        { "SpriteRendererColor (Gradient)", new GradientTweenerTarget<SpriteRenderer>(SpriteRendererTweens.Color) },
         { "CameraFieldOfView", new FloatFromToTweenerTarget<Camera>(CameraTweens.FieldOfView) }
     };
 }
