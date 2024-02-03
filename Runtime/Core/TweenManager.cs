@@ -10,6 +10,8 @@ namespace FlowTween {
     
 /// <summary>
 /// Singleton for running and pooling <see cref="Runnable"/> objects at runtime.
+/// All extension methods for creating tweens and sequences automatically add
+/// the created tween to this.
 /// </summary>
 [DisallowMultipleComponent]
 [AddComponentMenu("FlowTween/Tween Manager")]

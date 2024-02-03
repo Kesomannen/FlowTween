@@ -1,5 +1,5 @@
-﻿using FlowTween.Sequencing;
-using UnityEngine;
+﻿using UnityEngine;
+using FlowTween.Sequencing;
 
 namespace FlowTween {
 

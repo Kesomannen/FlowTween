@@ -3,7 +3,8 @@
 namespace FlowTween {
 
 /// <summary>
-/// The main tween class.
+/// The main tween class. Can be configured using a
+/// builder-like pattern.
 /// </summary>
 public class Tween<T> : TweenBase {
     /// <summary>
@@ -23,7 +24,7 @@ public class Tween<T> : TweenBase {
     
     /// <summary>
     /// Function to linearly interpolate between <see cref="Start"/> and <see cref="End"/>.
-    /// Make sure this isn't null when the tween starts (usually the next frame).
+    /// Should be unclamped. Make sure this isn't null when the tween starts (usually the next frame).
     /// </summary>
     public LerpFunction<T> LerpFunction { get; set; }
     
@@ -39,10 +40,10 @@ public class Tween<T> : TweenBase {
     }
 
     public override void Cancel(bool safe) {
-        base.Cancel(safe);
         if (!safe) {
             UpdateAction?.Invoke(End);
         }
+        base.Cancel(safe);
     }
 
     public override void Reset() {

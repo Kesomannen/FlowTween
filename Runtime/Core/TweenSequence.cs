@@ -7,8 +7,8 @@ using UnityEngine;
 namespace FlowTween.Sequencing {
 
 /// <summary>
-/// A sequence of tweens, actions and delays. Items in this type of
-/// sequence have a fixed duration.
+/// A lightweight sequence of tweens, actions and delays.
+/// Items in this sequence have a fixed duration.
 /// </summary>
 public class TweenSequence : Runnable {
     readonly List<Item> _items = new();

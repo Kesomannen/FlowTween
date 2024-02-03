@@ -27,7 +27,7 @@
 
 ### Fixed
 
-- `Sequence` actually works now
+- `TweenSequence` actually works now
 
 ### Removed
 
