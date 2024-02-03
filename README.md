@@ -34,7 +34,7 @@ Prefer a no-code approach? The `Tweener` component can tween tons of properties 
 
 <b>Note: The Tweener component is fully incompatible with IMGUI.</b>
 
-Check out the [wiki](https://github.com/Kesomannen/FlowTween/wiki) for more examples and thorough documentation of all the features.
+Check out the [wiki](https://github.com/Kesomannen/FlowTween/wiki) for more examples and a list of all the features.
 
 ## Installation
 
